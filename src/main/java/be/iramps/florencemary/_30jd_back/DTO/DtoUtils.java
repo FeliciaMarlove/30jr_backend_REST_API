@@ -1,4 +1,4 @@
-package be.iramps.florencemary._30jd_crud.DTO;
+package be.iramps.florencemary._30jd_back.DTO;
 
 import org.modelmapper.ModelMapper;
 

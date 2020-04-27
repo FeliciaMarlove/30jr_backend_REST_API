@@ -1,4 +1,4 @@
-package be.iramps.florencemary._30jd_crud;
+package be.iramps.florencemary._30jd_back;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
