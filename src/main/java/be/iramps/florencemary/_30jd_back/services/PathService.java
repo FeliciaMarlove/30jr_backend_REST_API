@@ -22,6 +22,10 @@ public class PathService implements CRUDService {
         this.pathRepository = pathRepository;
     }
 
+    /*
+    CRUD OPERATIONS
+     */
+
     @Override
     public DTOEntity read(Integer id) {
         Optional<Path> optPath = pathRepository.findById(id);
@@ -38,18 +42,45 @@ public class PathService implements CRUDService {
 
     @Override
     public DTOEntity create(DTOEntity dtoEntity) {
-        Path p = (Path)new DtoUtils().convertToEntity(new Path(), dtoEntity);
-        pathRepository.save(p);
-        return new DtoUtils().convertToDto(p, new PathGet());
+        if (pathRepository.findByPathName(((PathPost)dtoEntity).getPathName()) == null) {
+            Path p = (Path)new DtoUtils().convertToEntity(new Path(), dtoEntity);
+            pathRepository.save(p);
+            return new DtoUtils().convertToDto(p, new PathGet());
+        }
+        return null;
     }
 
     @Override
     public DTOEntity update(Integer id, DTOEntity dtoEntity) {
+        if(pathRepository.existsById(id)) {
+            Path p = pathRepository.findById(id).get();
+            p.setPathName(((PathPost)dtoEntity).getPathName());
+            p.setPathShortDescription(((PathPost)dtoEntity).getPathShortDescription());
+            p.setPathLongDescription(((PathPost)dtoEntity).getPathLongDescription());
+            pathRepository.save(p);
+            return new DtoUtils().convertToDto(p, new PathGet());
+        }
         return null;
     }
 
     @Override
     public DTOEntity delete(Integer id) {
+        Optional<Path> optPath = pathRepository.findById(id);
+        if(optPath.isPresent()) {
+            optPath.get().setPathActive(false);
+            pathRepository.save(optPath.get());
+            return new DtoUtils().convertToDto(optPath.get(), new PathGet());
+        }
+        return null;
+    }
+
+    public DTOEntity activate(Integer id) {
+        Optional<Path> optPath = pathRepository.findById(id);
+        if(optPath.isPresent()) {
+            optPath.get().setPathActive(true);
+            pathRepository.save(optPath.get());
+            return new DtoUtils().convertToDto(optPath.get(), new PathGet());
+        }
         return null;
     }
 }

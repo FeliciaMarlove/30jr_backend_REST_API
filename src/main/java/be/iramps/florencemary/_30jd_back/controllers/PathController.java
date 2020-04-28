@@ -27,8 +27,28 @@ public class PathController {
         return this.service.read();
     }
 
+    @GetMapping("/{id}")
+    public DTOEntity read(@PathVariable("id") Integer id) {
+        return this.service.read(id);
+    }
+
     @PostMapping
     public DTOEntity create(@RequestBody PathPost path) {
         return this.service.create(path);
+    }
+
+    @PutMapping("/{id}")
+    public DTOEntity update(@PathVariable("id") Integer id, @RequestBody PathPost path) {
+        return this.service.update(id, path);
+    }
+
+    @DeleteMapping("/{id}")
+    public DTOEntity delete(@PathVariable("id") Integer id) {
+        return this.service.delete(id);
+    }
+
+    @DeleteMapping("/{id}/activate")
+    public DTOEntity activate(@PathVariable("id") Integer id) {
+        return this.service.activate(id);
     }
 }
