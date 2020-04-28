@@ -8,6 +8,7 @@ public class DtoUtils {
   }
 
   public Object convertToEntity(Object obj, DTOEntity mapper) {
-    return new ModelMapper().map(mapper, obj.getClass());
+
+        return new ModelMapper().map(mapper, obj.getClass());
   }
 }
