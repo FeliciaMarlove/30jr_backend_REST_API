@@ -96,6 +96,9 @@ public class Path implements Serializable {
         this.tasks = new ArrayList<>();
     }
 
+    public Path() {
+
+    }
 
     // HASH EQUALS STRING
 
@@ -105,11 +108,7 @@ public class Path implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Path path = (Path) o;
         return pathActive == path.pathActive &&
-                pathId.equals(path.pathId) &&
-                pathName.equals(path.pathName) &&
-                pathShortDescription.equals(path.pathShortDescription) &&
-                Objects.equals(pathLongDescription, path.pathLongDescription) &&
-                Objects.equals(tasks, path.tasks);
+                pathName.equals(path.pathName);
     }
 
     @Override

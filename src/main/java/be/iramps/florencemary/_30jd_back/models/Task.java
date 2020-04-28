@@ -103,11 +103,7 @@ public class Task implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
         return taskActive == task.taskActive &&
-                taskId.equals(task.taskId) &&
-                taskName.equals(task.taskName) &&
-                taskShortDescription.equals(task.taskShortDescription) &&
-                Objects.equals(taskLongDescription, task.taskLongDescription) &&
-                Objects.equals(paths, task.paths);
+                taskName.equals(task.taskName);
     }
 
     @Override
