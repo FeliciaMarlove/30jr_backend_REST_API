@@ -51,4 +51,14 @@ public class PathController {
     public DTOEntity activate(@PathVariable("id") Integer id) {
         return this.service.activate(id);
     }
+
+    @GetMapping("/{id}/{taskId}/{index}")
+    public List<DTOEntity> addTask(@PathVariable("id") Integer id, @PathVariable("taskId") Integer taskId, @PathVariable("index") Integer index) {
+        return this.service.addTask(id, taskId, index);
+    }
+
+    @GetMapping("/{id}/{taskId}")
+    public List<DTOEntity> removeTask(@PathVariable("id") Integer id, @PathVariable("taskId") Integer taskId) {
+        return this.service.removeTask(id, taskId);
+    }
 }
