@@ -4,6 +4,7 @@ import be.iramps.florencemary._30jd_back.DTO.*;
 import be.iramps.florencemary._30jd_back.models.User;
 import be.iramps.florencemary._30jd_back.models.UserRole;
 import be.iramps.florencemary._30jd_back.repositories.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,24 @@ public class UserService implements CRUDService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+
+     /*
+    BUSINESS LAYER
+     */
+
+     public Message login(DTOEntity connection) {
+        String pwd = ((Connection)connection).getPassword();
+        String email = ((Connection)connection).getEmail();
+        for(User u: userRepository.findAll()) {
+            if (u.getEmail().equals(email)) {
+                if(BCrypt.checkpw(pwd, u.getPassword())) {
+                    return new Message("Connection succeeded", true);
+                }
+                return new Message("Wrong password", false);
+            }
+        }
+        return new Message("Email not found", false);
+     }
 
     /*
     CRUD OPERATIONS
