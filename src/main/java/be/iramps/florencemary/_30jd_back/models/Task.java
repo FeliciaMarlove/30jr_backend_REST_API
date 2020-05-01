@@ -22,14 +22,14 @@ public class Task implements Serializable {
     @Column(name = "task_short_desc", nullable = false)
     private String taskShortDescription;
 
-    @Column(name = "task_long_desc")
+    @Column(name = "task_long_desc", length = 1000)
     private String taskLongDescription;
 
     @Column(name = "task_active")
     private boolean taskActive;
 
     // JOINS
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE

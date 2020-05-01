@@ -22,14 +22,14 @@ public class Path implements Serializable {
     @Column(name = "path_short_desc", nullable = false)
     private String pathShortDescription;
 
-    @Column(name = "path_long_desc")
+    @Column(name = "path_long_desc", length = 1000)
     private String pathLongDescription;
 
     @Column(name = "path_active")
     private boolean pathActive;
 
     // JOINS
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE

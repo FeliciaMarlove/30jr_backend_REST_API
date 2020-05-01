@@ -32,6 +32,9 @@ public class PathController {
         return this.service.read(id);
     }
 
+    @GetMapping("/{id}/tasks")
+    public List<DTOEntity> listTasks(@PathVariable("id") Integer id) { return this.service.listTasks(id); }
+
     @PostMapping
     public DTOEntity create(@RequestBody PathPost path) {
         return this.service.create(path);

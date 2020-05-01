@@ -38,7 +38,7 @@ public class PathService implements CRUDService {
         if (optionalPath.isPresent() && optionalPath.get().getTasks().size() < 30) {
             Path p = optionalPath.get();
             Optional<Task> optionalTask = taskRepository.findById(taskId);
-            if (optionalTask.isPresent()) {
+            if (optionalTask.isPresent() && optionalTask.get().isTaskActive()) {
                 Task task = optionalTask.get();
                 p.getTasks().add(index, task);
                 task.getPaths().add(p);
@@ -143,5 +143,16 @@ public class PathService implements CRUDService {
             if ((up.getPath().getPathId().equals(id) && up.isOngoing())) return true;
         }
         return false;
+    }
+
+    public List<DTOEntity> listTasks(Integer id) {
+        List<DTOEntity> list = new ArrayList<>();
+        Optional<Path> optionalPath = pathRepository.findById(id);
+        if (optionalPath.isPresent()) {
+            for (Task t: optionalPath.get().getTasks()) {
+                list.add(new DtoUtils().convertToDto(t, new TaskGet()));
+            }
+        }
+       return list;
     }
 }
