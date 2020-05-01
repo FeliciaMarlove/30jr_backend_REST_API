@@ -2,6 +2,7 @@ package be.iramps.florencemary._30jd_back.DTO;
 
 public class Message implements DTOEntity {
     private String msg;
+    private boolean aBoolean;
 
     public String getMsg() {
         return msg;
@@ -11,8 +12,21 @@ public class Message implements DTOEntity {
         this.msg = msg;
     }
 
+    public boolean isaBoolean() {
+        return aBoolean;
+    }
+
+    public void setaBoolean(boolean aBoolean) {
+        this.aBoolean = aBoolean;
+    }
+
     public Message(String msg) {
         this.msg = msg;
+    }
+
+    public Message(String msg, boolean aBoolean) {
+        this(msg);
+        this.aBoolean = aBoolean;
     }
 
     public Message() {

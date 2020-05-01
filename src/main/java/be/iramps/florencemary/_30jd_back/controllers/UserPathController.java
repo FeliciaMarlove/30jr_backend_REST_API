@@ -2,9 +2,9 @@ package be.iramps.florencemary._30jd_back.controllers;
 
 import be.iramps.florencemary._30jd_back.DTO.DTOEntity;
 import be.iramps.florencemary._30jd_back.DTO.UserPathPost;
-import be.iramps.florencemary._30jd_back.models.PK_User_Path;
 import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
 import be.iramps.florencemary._30jd_back.services.UserPathService;
+import be.iramps.florencemary._30jd_back.utilities.UserPathHistoryObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,4 +28,14 @@ public class UserPathController {
 
     @PostMapping
     public DTOEntity create(@RequestBody UserPathPost userPath) { return this.service.create(userPath); }
+
+    @GetMapping("/{userId}")
+    public DTOEntity read(@PathVariable("userId") Integer userId) {
+        return this.service.seeTaskOfTheDay(userId);
+    }
+
+    @GetMapping("/{userId}/history")
+    public List<UserPathHistoryObj> listHistory(@PathVariable("userId") Integer userId) {
+        return this.service.listHistory(userId);
+    }
 }
