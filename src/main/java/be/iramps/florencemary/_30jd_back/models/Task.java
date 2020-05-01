@@ -119,7 +119,6 @@ public class Task implements Serializable {
                 ", taskShortDescription='" + taskShortDescription + '\'' +
                 ", taskLongDescription='" + taskLongDescription + '\'' +
                 ", taskActive=" + taskActive +
-                ", paths=" + paths +
                 '}';
     }
 }
