@@ -9,9 +9,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-/**
- * For development and test purpose
- */
 @Order(1)
 @Component
 public class AdminUsersDataLoader implements ApplicationRunner {

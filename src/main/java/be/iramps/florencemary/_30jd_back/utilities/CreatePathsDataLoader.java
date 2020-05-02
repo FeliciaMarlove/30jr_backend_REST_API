@@ -47,3 +47,24 @@ public class CreatePathsDataLoader implements ApplicationRunner {
         }
     }
 }
+
+/*
+PRODUCTION CODE
+Path and Task tables must be empty
+Tasks must be 30 * Paths
+ */
+
+//        for (int i = 1; i <= pathRepository.count(); i++) {
+//        Path testPath = pathRepository.findById(i).get();
+//        if (testPath.getTasks().size() == 0) {
+//        for(int j = 1 ; j <= 30 ; j ++) {
+//        testPath.getTasks().add(taskRepository.findById(j).get());
+//        }
+//        pathRepository.save(testPath);
+//        System.out.println("Path filled");
+//        } else {
+//        System.out.println("Path already filled");
+//        }
+//        System.out.println("PATH SIZE: " + testPath.getTasks().size()+ " | TASKS LIST: ");
+//        System.out.print(testPath.getTasks());
+//        }
