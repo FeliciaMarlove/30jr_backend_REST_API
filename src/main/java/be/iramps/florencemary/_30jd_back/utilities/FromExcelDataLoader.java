@@ -27,8 +27,8 @@ public class FromExcelDataLoader implements ApplicationRunner {
     private TaskRepository taskRepository;
     private PathRepository pathRepository;
     private String path1 = "./src/main/resources/dataloader.xlsx";
-    private String path2 = "./src/main/resources/dataloader_duplicate.xlsx";
-    private String path3 = "./src/main/resources/dataloader_empty_long.xlsx";
+    private String path2 = "./src/main/resources/dataloader_duplicate.xlsx"; // for test purpose: meant not to be loaded bc of duplicate names
+    private String path3 = "./src/main/resources/dataloader_empty_long.xlsx"; // for test purpose: set of Paths/Tasks with empty long descriptions
     // additional paths to be declared here
     //private String pathN = "./relative/path/dataloaderfile.xlsx";
     // additional paths to be declared here
