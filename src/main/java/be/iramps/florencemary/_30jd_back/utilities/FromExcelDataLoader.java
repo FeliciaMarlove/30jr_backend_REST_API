@@ -27,12 +27,18 @@ public class FromExcelDataLoader implements ApplicationRunner {
     private TaskRepository taskRepository;
     private PathRepository pathRepository;
     private String path1 = "./src/main/resources/dataloader.xlsx";
+    private String path2 = "./src/main/resources/dataloader_duplicate.xlsx";
+    private String path3 = "./src/main/resources/dataloader_empty_long.xlsx";
+    // additional paths to be declared here
+    //private String pathN = "./relative/path/dataloaderfile.xlsx";
     // additional paths to be declared here
     private List<String> paths = new ArrayList<>();
     private FileInputStream inputStream = null;
 
     {
         paths.add(path1);
+        paths.add(path2);
+        paths.add(path3);
     }
 
     @Autowired
