@@ -74,7 +74,6 @@ public class UserPath implements Serializable {
 
     // HASH EQUALS STRING
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

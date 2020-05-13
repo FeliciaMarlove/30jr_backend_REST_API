@@ -103,7 +103,8 @@ public class UserPathService {
         Optional<User> optionalUser = userRepository.findById(((UserPathPost)dtoEntity).getUserId());
         if(optionalUser.isPresent() && !optionalUser.get().isBusy()) {
             Optional<Path> optPath = pathRepository.findById(((UserPathPost)dtoEntity).getPathId());
-            if (!optPath.isPresent()) return null;
+            if (!optPath.isPresent()) return new Message("Le parcours n'existe pas");
+            if (!optPath.get().isPathActive() && optPath.get().getTasks().size() != 30) return new Message("Le parcours n'est pas disponible");
             Path p = optPath.get();
             User u = optionalUser.get();
             u.setBusy(true);
@@ -112,6 +113,6 @@ public class UserPathService {
             userPathRepository.save(up);
             return new DtoUtils().convertToDto(up, new UserPathGet());
         }
-        return null;
+        return new Message("L'utilisateur n'a pas été trouvé ou a déjà commencé un parcours");
     }
 }
