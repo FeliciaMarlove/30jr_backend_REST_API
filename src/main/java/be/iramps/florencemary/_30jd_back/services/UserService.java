@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService implements CRUDService {
@@ -31,12 +33,12 @@ public class UserService implements CRUDService {
         for(User u: userRepository.findAll()) {
             if (u.getEmail().equals(email)) {
                 if(BCrypt.checkpw(pwd, u.getPassword())) {
-                    return new Message("Connection succeeded "+u.getUserRole(), true);
+                    return new Message("Connexion réussie |ROLE "+u.getUserRole(), true);
                 }
-                return new Message("Wrong password", false);
+                return new Message("Mot de passe incorrect.", false);
             }
         }
-        return new Message("Email not found", false);
+        return new Message("L'adresse e-mail n'existe pas.", false);
      }
 
     /*
@@ -47,7 +49,7 @@ public class UserService implements CRUDService {
     public DTOEntity read(Integer id) {
         Optional<User> optUser = userRepository.findById(id);
         return optUser.isPresent() ?
-                new DtoUtils().convertToDto(optUser.get(), new UserGet()) : null;
+                new DtoUtils().convertToDto(optUser.get(), new UserGet()) : new Message("L'utilisateur n'a pas été trouvé.", false);
     }
 
     @Override
@@ -57,27 +59,51 @@ public class UserService implements CRUDService {
         return list;
     }
 
+    private boolean validateEmail(String emailToValidate) {
+        //regex documentation : https://howtodoinjava.com/regex/java-regex-validate-email-address/
+        String regex = "^[\\w!#$%&’*+/=?`|{}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(emailToValidate);
+        return matcher.matches();
+    }
+
+    private boolean validatePassword(String pwdToValidate) {
+        return pwdToValidate.length() >= 6;
+    }
+
     @Override
     public DTOEntity create(DTOEntity dtoEntity) {
+        if (!validateEmail(((UserPost)dtoEntity).getEmail())) return new Message("Le format de l'e-mail est incorrect", false);
+        if (!validatePassword(((UserPost)dtoEntity).getPassword())) return new Message("Le mot de passe doit comporter au moins 6 caractères", false);
         if(userRepository.findByEmail(((UserPost)dtoEntity).getEmail()) == null) {
             User u = (User)new DtoUtils().convertToEntity(new User(), dtoEntity);
-            u.setUserRole(UserRole.USER);
-            userRepository.save(u);
-            return new DtoUtils().convertToDto(u, new UserGet());
+            System.out.println(u);
+            try {
+                u.setUserRole(UserRole.USER);
+                userRepository.save(u);
+                return new DtoUtils().convertToDto(u, new UserGet());
+            } catch (Exception e) {
+                return new Message("Données manquantes, l'enregistrement a échoué.", false);
+            }
         }
-        return null;
+        return new Message("L'email existe déjà.", false);
     }
 
     @Override
     public DTOEntity update(Integer id, DTOEntity dtoEntity) {
+        if (((UserPost)dtoEntity).getEmail() != null && !validateEmail(((UserPost)dtoEntity).getEmail())) return new Message("Le format de l'e-mail est incorrect", false);
         if(userRepository.existsById(id)) {
             User u = userRepository.findById(id).get();
-            u.setEmail(((UserPost)dtoEntity).getEmail());
-            u.setNewsletter(((UserPost)dtoEntity).isNewsletter());
-            userRepository.save(u);
-            return new DtoUtils().convertToDto(u, new UserGet());
+            try {
+                u.setEmail(((UserPost)dtoEntity).getEmail());
+                u.setNewsletter(((UserPost)dtoEntity).isNewsletter());
+                userRepository.save(u);
+                return new DtoUtils().convertToDto(u, new UserGet());
+            } catch (Exception e) {
+                return new Message("Données manquantes ou doublon, l'enregistrement a échoué.", false);
+            }
         }
-        return null;
+        return new Message("L'utlisateur avec l'ID " + id + "n'a pas été trouvé.", false);
     }
 
     @Override
@@ -85,7 +111,8 @@ public class UserService implements CRUDService {
         Optional<User> optUser = userRepository.findById(id);
         if(optUser.isPresent()) {
             userRepository.delete(optUser.get());
+            return new Message("Utilisateur avec l'ID " + id + " supprimé", true);
         }
-        return new Message("User with id " + id + " deleted");
+        return new Message("L'utilisateur n'a pas été trouvé.", false);
     }
 }
