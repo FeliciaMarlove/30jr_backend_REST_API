@@ -104,7 +104,7 @@ public class PathService implements CRUDService {
     public DTOEntity read(Integer id) {
         Optional<Path> optPath = pathRepository.findById(id);
         return optPath.isPresent() ?
-                new DtoUtils().convertToDto(optPath.get(), new PathGet()) : null ;
+                new DtoUtils().convertToDto(optPath.get(), new PathGet()) : new Message("Le parcours n'a pas été trouvé", false) ;
     }
 
     @Override
@@ -141,9 +141,8 @@ public class PathService implements CRUDService {
             } catch (Exception e) {
                 return new Message("Informations manquantes ou doublon, l'enregistrement a échoué.", false);
             }
-
         }
-        return new Message("Le path avec l'ID " + id + " n'a pas été trouvé, l'enregistrement a échoué.", false);
+        return new Message("Le parcours avec l'ID " + id + " n'a pas été trouvé, l'enregistrement a échoué.", false);
     }
 
     @Override
