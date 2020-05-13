@@ -1,6 +1,7 @@
 package be.iramps.florencemary._30jd_back.controllers;
 
 import be.iramps.florencemary._30jd_back.DTO.DTOEntity;
+import be.iramps.florencemary._30jd_back.DTO.Message;
 import be.iramps.florencemary._30jd_back.DTO.PathPost;
 import be.iramps.florencemary._30jd_back.repositories.PathRepository;
 import be.iramps.florencemary._30jd_back.services.PathService;
@@ -55,13 +56,13 @@ public class PathController {
         return this.service.activate(id);
     }
 
-    @GetMapping("/{id}/{taskId}/{index}")
-    public List<DTOEntity> addTask(@PathVariable("id") Integer id, @PathVariable("taskId") Integer taskId, @PathVariable("index") Integer index) {
+    @GetMapping("/{id}/add/{taskId}/{index}")
+    public Message addTask(@PathVariable("id") Integer id, @PathVariable("taskId") Integer taskId, @PathVariable("index") Integer index) {
         return this.service.addTask(id, taskId, index);
     }
 
-    @GetMapping("/{id}/{taskId}")
-    public List<DTOEntity> removeTask(@PathVariable("id") Integer id, @PathVariable("taskId") Integer taskId) {
+    @GetMapping("/{id}/remove/{taskId}")
+    public Message removeTask(@PathVariable("id") Integer id, @PathVariable("taskId") Integer taskId) {
         return this.service.removeTask(id, taskId);
     }
 }

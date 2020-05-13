@@ -25,7 +25,7 @@ public class Task implements Serializable {
     @Column(name = "task_long_desc", length = 1000)
     private String taskLongDescription;
 
-    @Column(name = "task_active")
+    @Column(name = "task_active", nullable = false)
     private boolean taskActive;
 
     // JOINS

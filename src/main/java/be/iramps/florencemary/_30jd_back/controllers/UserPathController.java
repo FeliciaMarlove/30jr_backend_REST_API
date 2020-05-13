@@ -38,4 +38,9 @@ public class UserPathController {
     public List<UserPathHistoryObj> listHistory(@PathVariable("userId") Integer userId) {
         return this.service.listHistory(userId);
     }
+
+    @GetMapping("/{userId}/today")
+    public DTOEntity seeTaskOfDay(@PathVariable("userId") Integer userId) {
+        return this.service.seeTaskOfTheDay(userId);
+    }
 }

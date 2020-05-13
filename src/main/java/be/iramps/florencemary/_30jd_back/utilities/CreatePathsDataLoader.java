@@ -31,7 +31,7 @@ public class CreatePathsDataLoader implements ApplicationRunner {
             // TO CHANGE FOR PRODUCTION------------------------------------------------------
             Path testPath = pathRepository.findById(1).get();
             if (testPath.getTasks().size() == 0) {
-                for(int i = 0 ; i < taskRepository.count() ; i ++) {
+                for(int i = 0 ; i < 30 ; i ++) {
                     testPath.getTasks().add(taskRepository.findById(i+1).get());
                 }
                 pathRepository.save(testPath);

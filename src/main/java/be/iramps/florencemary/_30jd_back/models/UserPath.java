@@ -11,7 +11,7 @@ public class UserPath implements Serializable {
     @EmbeddedId
     private PK_User_Path pkUserPath;
 
-    @Column(name = "ongoing")
+    @Column(name = "ongoing", nullable = false)
     private boolean ongoing;
 
     // JOINS

@@ -31,7 +31,7 @@ public class UserService implements CRUDService {
         for(User u: userRepository.findAll()) {
             if (u.getEmail().equals(email)) {
                 if(BCrypt.checkpw(pwd, u.getPassword())) {
-                    return new Message("Connection succeeded", true);
+                    return new Message("Connection succeeded "+u.getUserRole(), true);
                 }
                 return new Message("Wrong password", false);
             }

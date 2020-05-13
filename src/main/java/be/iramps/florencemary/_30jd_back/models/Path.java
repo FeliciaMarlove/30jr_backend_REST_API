@@ -25,7 +25,7 @@ public class Path implements Serializable {
     @Column(name = "path_long_desc", length = 1000)
     private String pathLongDescription;
 
-    @Column(name = "path_active")
+    @Column(name = "path_active", nullable = false)
     private boolean pathActive;
 
     // JOINS

@@ -33,29 +33,29 @@ public class PathService implements CRUDService {
      */
 
     @Transactional
-    public List<DTOEntity> addTask(Integer pathId, Integer taskId, Integer index) {
+    public Message addTask(Integer pathId, Integer taskId, Integer index) {
         Optional<Path> optionalPath = pathRepository.findById(pathId);
         if (optionalPath.isPresent() && optionalPath.get().getTasks().size() < 30) {
             Path p = optionalPath.get();
             Optional<Task> optionalTask = taskRepository.findById(taskId);
             if (optionalTask.isPresent() && optionalTask.get().isTaskActive() && !isAlreadyInPath(p, optionalTask.get())) {
                 Task task = optionalTask.get();
-                if (index == null) {
-                    p.getTasks().add(task);
-                } else {
+                if (index >= 0 &&
+                        (index <= p.getTasks().size()
+                                ||
+                                (p.getTasks().isEmpty() && index == 0))
+                ) {
                     p.getTasks().add(index, task);
+                } else {
+                    return new Message("L'index n'est pas valide", false);
                 }
-                // task.getPaths().add(p);
                 taskRepository.save(task);
                 pathRepository.save(p);
+                return new Message("Défi ajouté", true);
             }
-            List<DTOEntity> tasksInPath = new ArrayList<>();
-            for(Task t: p.getTasks()) {
-                tasksInPath.add(new DtoUtils().convertToDto(t, new TaskGet()));
-            }
-            return tasksInPath;
+            return new Message("Le défi n'existe pas, est inactif ou est déjà dans la liste", false);
         }
-       return null;
+        return new Message("Le parcours n'a pas été trouvé ou est complet", false);
     }
 
     private boolean isAlreadyInPath(Path path, Task task) {
@@ -66,26 +66,28 @@ public class PathService implements CRUDService {
     }
 
     @Transactional
-    public List<DTOEntity> removeTask(Integer pathId, Integer taskId) {
+    public Message removeTask(Integer pathId, Integer taskId) {
         Optional<Path> optionalPath = pathRepository.findById(pathId);
         if (optionalPath.isPresent()) {
             Path p = optionalPath.get();
             Optional<Task> optionalTask = taskRepository.findById(taskId);
-            if (optionalTask.isPresent()) {
+            if (optionalTask.isPresent() && p.getTasks().size() > 0) {
                 Task task = optionalTask.get();
-                p.getTasks().remove(task);
-                task.getPaths().remove(p);
-                taskRepository.save(task);
-                pathRepository.save(p);
+                if (p.getTasks().remove(task)) {
+                    pathRepository.save(p);
+                    return new Message("Défi supprimé de la liste", true);
+                }
+                //task.getPaths().remove(p);
+                //taskRepository.save(task);
             }
-            List<DTOEntity> tasksInPath = new ArrayList<>();
-            for(Task t: p.getTasks()) {
-                tasksInPath.add(new DtoUtils().convertToDto(t, new TaskGet()));
-            }
-            return tasksInPath;
+            return new Message("Le défi n'est pas dans la liste", false);
         }
-        return null;
+        return new Message("L'ID du parcours n'a pas été trouvé", false);
     }
+
+    /*
+    CRUD OPERATIONS
+     */
 
     public List<DTOEntity> listTasks(Integer id) {
         List<DTOEntity> list = new ArrayList<>();
@@ -97,10 +99,6 @@ public class PathService implements CRUDService {
         }
         return list;
     }
-
-    /*
-    CRUD OPERATIONS
-     */
 
     @Override
     public DTOEntity read(Integer id) {
@@ -120,23 +118,32 @@ public class PathService implements CRUDService {
     public DTOEntity create(DTOEntity dtoEntity) {
         if (pathRepository.findByPathName(((PathPost)dtoEntity).getPathName()) == null) {
             Path p = (Path)new DtoUtils().convertToEntity(new Path(), dtoEntity);
-            pathRepository.save(p);
-            return new DtoUtils().convertToDto(p, new PathGet());
+            try {
+                pathRepository.save(p);
+                return new DtoUtils().convertToDto(p, new PathGet());
+            } catch (Exception e) {
+                return new Message("Informations manquantes, l'enregistrement a échoué.", false);
+            }
         }
-        return null;
+        return new Message("Le nom du parcours existe déjà, l'enregistrement a échoué.", false);
     }
 
     @Override
     public DTOEntity update(Integer id, DTOEntity dtoEntity) {
         if(pathRepository.existsById(id)) {
             Path p = pathRepository.findById(id).get();
-            p.setPathName(((PathPost)dtoEntity).getPathName());
-            p.setPathShortDescription(((PathPost)dtoEntity).getPathShortDescription());
-            p.setPathLongDescription(((PathPost)dtoEntity).getPathLongDescription());
-            pathRepository.save(p);
-            return new DtoUtils().convertToDto(p, new PathGet());
+            try {
+                p.setPathName(((PathPost)dtoEntity).getPathName());
+                p.setPathShortDescription(((PathPost)dtoEntity).getPathShortDescription());
+                p.setPathLongDescription(((PathPost)dtoEntity).getPathLongDescription());
+                pathRepository.save(p);
+                return new DtoUtils().convertToDto(p, new PathGet());
+            } catch (Exception e) {
+                return new Message("Informations manquantes ou doublon, l'enregistrement a échoué.", false);
+            }
+
         }
-        return null;
+        return new Message("Le path avec l'ID " + id + " n'a pas été trouvé, l'enregistrement a échoué.", false);
     }
 
     @Override
@@ -147,7 +154,7 @@ public class PathService implements CRUDService {
             pathRepository.save(optPath.get());
             return new DtoUtils().convertToDto(optPath.get(), new PathGet());
         }
-        return null;
+        return new Message("La parcours avec l'ID " + id + " n'a pas été trouvé.", false);
     }
 
     public DTOEntity activate(Integer id) {
@@ -157,7 +164,7 @@ public class PathService implements CRUDService {
             pathRepository.save(optPath.get());
             return new DtoUtils().convertToDto(optPath.get(), new PathGet());
         }
-        return null;
+        return new Message("La parcours avec l'ID " + id + " n'a pas été trouvé.", false);
     }
 
     private boolean pathIsUsed(Integer id) {
