@@ -12,7 +12,7 @@
     <artifactId>_30jd_crud</artifactId>
     <version>0.0.1</version>
     <name>_30jd_crud</name>
-    <description>Application CRUD sur la base de données 30 jours pour désencombrer</description>
+    <description>30 jours pour désencombrer</description>
 
     <properties>
         <java.version>11</java.version>
@@ -37,6 +37,16 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <!--SPRING SECURITY DEPENDENCIES-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.mindrot/jbcrypt -->
         <dependency>

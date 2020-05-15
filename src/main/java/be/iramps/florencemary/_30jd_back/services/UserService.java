@@ -115,4 +115,8 @@ public class UserService implements CRUDService {
         }
         return new Message("L'utilisateur n'a pas été trouvé.", false);
     }
+
+    public User getByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

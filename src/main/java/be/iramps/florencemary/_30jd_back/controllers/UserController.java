@@ -48,4 +48,9 @@ public class UserController {
     public DTOEntity connect(@RequestBody Connection connection) {
         return this.service.login(connection);
     }
+
+    @PostMapping("/signup")
+    public DTOEntity signup(@RequestBody UserPost user) {
+        return this.service.create(user);
+    }
 }
