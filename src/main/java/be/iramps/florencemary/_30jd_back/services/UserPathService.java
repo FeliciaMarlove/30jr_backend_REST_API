@@ -74,23 +74,19 @@ public class UserPathService {
         return list;
     }
 
-    // same as create method !
-//    public Message startPath(Integer pathId, Integer userId) {
-//        Optional<User> optionalUser = userRepository.findById(userId);
-//        if (!optionalUser.isPresent()) return new Message("UserId not found", false);
-//        if (optionalUser.get().isBusy()) return new Message("User is already busy", false);
-//        Optional<Path> optionalPath = pathRepository.findById(pathId);
-//        if (!optionalPath.isPresent()) return new Message("PathId not found", false);
-//        UserPath up = new UserPath(optionalUser.get(), optionalPath.get());
-//        optionalUser.get().setBusy(true);
-//        userRepository.save(optionalUser.get());
-//        userPathRepository.save(up);
-//        return new Message("User " + userId + " just started path " + pathId, true);
-//    }
-
      /*
     CRUD OPERATIONS
      */
+
+    public List<DTOEntity> readPaths() {
+        List<DTOEntity> list = new ArrayList<>();
+        for(Path p: pathRepository.findAll()) {
+            if (p.isPathActive() && p.getTasks().size() == 30) {
+                list.add(new DtoUtils().convertToDto(p, new PathGet()));
+            }
+        }
+        return list;
+    }
 
     public List<DTOEntity> read() {
         List<DTOEntity> list = new ArrayList<>();

@@ -10,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Contrôleur Admin (CRUD sur les défis)
+ */
 @RestController
-@RequestMapping(value = "/api/path")
+@RequestMapping(value = "/admin/api/path")
 @CrossOrigin
 public class PathController {
     private final PathService service;

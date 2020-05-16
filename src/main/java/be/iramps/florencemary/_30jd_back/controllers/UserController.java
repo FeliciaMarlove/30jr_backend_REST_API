@@ -23,13 +23,13 @@ public class UserController {
         this.service = service;
     }
 
-    @GetMapping
-    public List<DTOEntity> read() { return this.service.read(); }
+//    @GetMapping
+//    public List<DTOEntity> read() { return this.service.read(); }
 
     @GetMapping("/{id}")
     public DTOEntity read(@PathVariable("id") Integer id) { return this.service.read(id); }
 
-    @PostMapping
+    @PostMapping("/signup")
     public DTOEntity create(@RequestBody UserPost user) {
         return this.service.create(user);
     }
@@ -47,10 +47,5 @@ public class UserController {
     @PostMapping("/connect")
     public DTOEntity connect(@RequestBody Connection connection) {
         return this.service.login(connection);
-    }
-
-    @PostMapping("/signup")
-    public DTOEntity signup(@RequestBody UserPost user) {
-        return this.service.create(user);
     }
 }

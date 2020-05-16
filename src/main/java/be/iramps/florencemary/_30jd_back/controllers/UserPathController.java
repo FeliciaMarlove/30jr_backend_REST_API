@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Contrôleur Admin (CRUD sur les parcours)
+ */
 @RestController
 @RequestMapping(value = "/api/userpath")
 @CrossOrigin
@@ -42,5 +45,10 @@ public class UserPathController {
     @GetMapping("/{userId}/today")
     public DTOEntity seeTaskOfDay(@PathVariable("userId") Integer userId) {
         return this.service.seeTaskOfTheDay(userId);
+    }
+
+    @GetMapping("/paths")
+    public List<DTOEntity> seeAvailablePaths() {
+        return this.service.readPaths();
     }
 }

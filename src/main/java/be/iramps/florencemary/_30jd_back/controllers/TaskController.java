@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/api/task")
+@RequestMapping(value = "/admin/api/task")
 @CrossOrigin
 public class TaskController {
     private final TaskService service;

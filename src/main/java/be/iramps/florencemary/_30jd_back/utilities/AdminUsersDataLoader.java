@@ -20,10 +20,6 @@ public class AdminUsersDataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("1 - Init super users");
-        if (userRepository.findByUserRole(UserRole.SUPER).size() == 0) {
-            userRepository.save(new User("super@super", "superpassword", false, UserRole.SUPER));
-            System.out.println("SUPER user created");
-        }
         if (userRepository.findByUserRole(UserRole.ADMIN).size() == 0) {
             userRepository.save(new User("admin@admin", "adminpassword", false, UserRole.ADMIN));
             userRepository.save(new User("admin2@admin2", "adminpassword2", false, UserRole.ADMIN));
