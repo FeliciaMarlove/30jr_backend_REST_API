@@ -2,7 +2,7 @@ package be.iramps.florencemary._30jd_back.services;
 
 import be.iramps.florencemary._30jd_back.DTO.*;
 import be.iramps.florencemary._30jd_back.models.User;
-import be.iramps.florencemary._30jd_back.models.UserRole;
+import be.iramps.florencemary._30jd_back.security.UserRoles;
 import be.iramps.florencemary._30jd_back.repositories.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +79,7 @@ public class UserService implements CRUDService {
             User u = (User)new DtoUtils().convertToEntity(new User(), dtoEntity);
             System.out.println(u);
             try {
-                u.setUserRole(UserRole.USER);
+                u.setUserRole(UserRoles.USER);
                 userRepository.save(u);
                 return new DtoUtils().convertToDto(u, new UserGet());
             } catch (Exception e) {

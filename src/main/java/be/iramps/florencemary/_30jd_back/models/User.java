@@ -1,5 +1,6 @@
 package be.iramps.florencemary._30jd_back.models;
 
+import be.iramps.florencemary._30jd_back.security.UserRoles;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
@@ -29,7 +30,7 @@ public class User implements Serializable {
     private boolean busy;
 
     @Column(name = "user_role", nullable = false)
-    private UserRole userRole;
+    private UserRoles userRole;
 
     // JOINS
 
@@ -71,17 +72,17 @@ public class User implements Serializable {
         this.busy = busy;
     }
 
-    public UserRole getUserRole() {
+    public UserRoles getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(UserRole userRole) {
+    public void setUserRole(UserRoles userRole) {
         this.userRole = userRole;
     }
 
     // CONSTRUCTORS
 
-    public User(String email, String password, boolean newsletter, UserRole userRole) {
+    public User(String email, String password, boolean newsletter, UserRoles userRole) {
         this.email = email;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
         this.newsletter = newsletter;

@@ -1,24 +1,22 @@
-package be.iramps.florencemary._30jd_back.models;
+package be.iramps.florencemary._30jd_back.security;
 
-import be.iramps.florencemary._30jd_back.security.UserPermissions;
 import com.google.common.collect.Sets;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public enum UserRole {
-    ADMIN(Sets.newHashSet(UserPermissions.ADMINISTRATION)),
-    USER(Sets.newHashSet(UserPermissions.ENDUSERRIGHTS));
+public enum UserRoles {
+    ADMIN(Sets.newHashSet(UserPermission.ADMINISTRATION)),
+    USER(Sets.newHashSet(UserPermission.ENDUSERRIGHTS));
 
-    private final Set<UserPermissions> permissions;
+    private final Set<UserPermission> permissions;
 
-    UserRole(Set<UserPermissions> permissions) {
+    UserRoles(Set<UserPermission> permissions) {
         this.permissions = permissions;
     }
 
-    public Set<UserPermissions> getPermissions() {
+    public Set<UserPermission> getPermissions() {
         return permissions;
     }
 

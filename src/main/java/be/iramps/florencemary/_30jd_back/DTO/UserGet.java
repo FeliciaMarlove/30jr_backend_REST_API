@@ -1,13 +1,13 @@
 package be.iramps.florencemary._30jd_back.DTO;
 
-import be.iramps.florencemary._30jd_back.models.UserRole;
+import be.iramps.florencemary._30jd_back.security.UserRoles;
 
 public class UserGet implements DTOEntity {
     private Integer userId;
     private String email;
     private boolean newsletter;
     private boolean busy;
-    private UserRole userRole;
+    private UserRoles userRole;
 
     public Integer getUserId() {
         return userId;
@@ -41,15 +41,15 @@ public class UserGet implements DTOEntity {
         this.busy = busy;
     }
 
-    public UserRole getUserRole() {
+    public UserRoles getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(UserRole userRole) {
+    public void setUserRole(UserRoles userRole) {
         this.userRole = userRole;
     }
 
-    public UserGet(Integer userId, String email, boolean newsletter, boolean busy, UserRole userRole) {
+    public UserGet(Integer userId, String email, boolean newsletter, boolean busy, UserRoles userRole) {
         this.userId = userId;
         this.email = email;
         this.newsletter = newsletter;
