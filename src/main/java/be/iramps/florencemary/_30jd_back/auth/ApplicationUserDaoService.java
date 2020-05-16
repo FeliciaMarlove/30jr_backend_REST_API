@@ -1,22 +1,24 @@
 package be.iramps.florencemary._30jd_back.auth;
 
+import be.iramps.florencemary._30jd_back.security.UserRoles;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import static be.iramps.florencemary._30jd_back.security.UserRoles.*;
 
 import java.util.List;
 import java.util.Optional;
 
-import static com.example.demo.security.ApplicationUserRole.*;
+@Repository("users")
+public class ApplicationUserDaoService implements ApplicationUserDao {
 
-@Repository("fake")
-public class FakeApplicationUserDaoService implements ApplicationUserDao {
+    //TODO : get users from DB
 
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public FakeApplicationUserDaoService(PasswordEncoder passwordEncoder) {
+    public ApplicationUserDaoService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -33,7 +35,7 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
                 new ApplicationUser(
                         "annasmith",
                         passwordEncoder.encode("password"),
-                        STUDENT.getGrantedAuthorities(),
+                        USER.getGrantedAuthorities(),
                         true,
                         true,
                         true,
@@ -51,7 +53,7 @@ public class FakeApplicationUserDaoService implements ApplicationUserDao {
                 new ApplicationUser(
                         "tom",
                         passwordEncoder.encode("password"),
-                        ADMINTRAINEE.getGrantedAuthorities(),
+                        USER.getGrantedAuthorities(),
                         true,
                         true,
                         true,
