@@ -5,7 +5,7 @@ import be.iramps.florencemary._30jd_back.models.*;
 import be.iramps.florencemary._30jd_back.repositories.PathRepository;
 import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
 import be.iramps.florencemary._30jd_back.repositories.UserRepository;
-import be.iramps.florencemary._30jd_back.utilities.UserPathHistoryObj;
+import be.iramps.florencemary._30jd_back.DTO.UserPathHistoryObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

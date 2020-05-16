@@ -4,7 +4,7 @@ import be.iramps.florencemary._30jd_back.DTO.DTOEntity;
 import be.iramps.florencemary._30jd_back.DTO.UserPathPost;
 import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
 import be.iramps.florencemary._30jd_back.services.UserPathService;
-import be.iramps.florencemary._30jd_back.utilities.UserPathHistoryObj;
+import be.iramps.florencemary._30jd_back.DTO.UserPathHistoryObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

@@ -51,8 +51,8 @@ public class FromExcelDataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         for (String path: paths) {
-            System.out.println("2 - Load tasks and paths from Excel file " + path);
             if (taskRepository.count() == 0 && pathRepository.count() == 0) {
+                System.out.println("2 - Load tasks and paths from Excel file " + path);
                 XSSFWorkbook workbook = null;
                 try {
                     workbook = new XSSFWorkbook(new FileInputStream(path));
@@ -79,8 +79,9 @@ public class FromExcelDataLoader implements ApplicationRunner {
                         System.out.println(ioe.getMessage());
                     }
                 }
+            } else {
+                System.out.println("Database already populated");
             }
-            System.out.println("Data from file " + path + " already loaded in database");
         }
     }
 }

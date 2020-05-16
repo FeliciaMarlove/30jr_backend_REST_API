@@ -1,4 +1,4 @@
-package be.iramps.florencemary._30jd_back.utilities;
+package be.iramps.florencemary._30jd_back.DTO;
 
 import java.time.LocalDate;
 
