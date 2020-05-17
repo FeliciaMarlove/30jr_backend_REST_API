@@ -1,4 +1,4 @@
-package be.iramps.florencemary._30jd_back.controllers;
+package be.iramps.florencemary._30jd_back.controllers.adminControllers;
 
 import be.iramps.florencemary._30jd_back.DTO.DTOEntity;
 import be.iramps.florencemary._30jd_back.DTO.Message;
