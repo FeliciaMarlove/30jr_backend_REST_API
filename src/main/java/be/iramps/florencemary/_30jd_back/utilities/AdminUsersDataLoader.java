@@ -22,8 +22,8 @@ public class AdminUsersDataLoader implements ApplicationRunner {
         System.out.println("1 - Init super users");
         //TODO : stronger passwords
         if (userRepository.findByUserRole(UserRoles.ADMIN).size() == 0) {
-            userRepository.save(new User("admin@admin", "adminpassword", false, UserRoles.ADMIN));
-            userRepository.save(new User("admin2@admin2", "adminpassword2", false, UserRoles.ADMIN));
+            userRepository.save(new User("admin@admin", "v3R s1!nG %W9z", false, UserRoles.ADMIN));
+            userRepository.save(new User("admin2@admin2", "z50! oP2r rtt_P", false, UserRoles.ADMIN));
             System.out.println("ADMIN users created");
         }
     }

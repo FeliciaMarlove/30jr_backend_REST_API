@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and() //TODO : décommenter à la fin des tests
                     .disable() //TODO : supprimer à la fin des tests
                 .authorizeRequests()
-                    .antMatchers("/connect*", "/signup*").permitAll()
+                    .antMatchers("/connection/**").permitAll()
                     .antMatchers("/api/user/**", "/api/userpath/**")
                     .hasRole(USER.name())
                     .antMatchers("/admin/**")
