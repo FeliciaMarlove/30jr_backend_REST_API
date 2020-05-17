@@ -8,31 +8,26 @@ import be.iramps.florencemary._30jd_back.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping(value = "/api/user")
+@RequestMapping(value = "/connexion")
 @CrossOrigin
-public class UserController {
+public class ConnectionController {
     private final UserService service;
 
     @Autowired
     private UserRepository repository;
 
-    public UserController(UserService service) {
+    public ConnectionController(UserService service) {
         this.service = service;
     }
 
-    @GetMapping("/{id}")
-    public DTOEntity read(@PathVariable("id") Integer id) { return this.service.read(id); }
-
-    @PutMapping("/{id}")
-    public DTOEntity update(@PathVariable("id") Integer id, @RequestBody UserPost user) {
-        return this.service.update(id, user);
+    @PostMapping("/connect")
+    public DTOEntity connect(@RequestBody Connection connection) {
+        return this.service.login(connection);
     }
 
-    @DeleteMapping("/{id}")
-    public DTOEntity delete(@PathVariable("id") Integer id) {
-        return this.service.delete(id);
+    @PostMapping("/signup")
+    public DTOEntity create(@RequestBody UserPost user) {
+        return this.service.create(user);
     }
 }

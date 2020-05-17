@@ -50,19 +50,20 @@ public class FromExcelDataLoader implements ApplicationRunner {
     @Transactional
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        for (String path: paths) {
-            if (taskRepository.count() == 0 && pathRepository.count() == 0) {
-                System.out.println("2 - Load tasks and paths from Excel file " + path);
+        System.out.println("2 - Load tasks and paths from Excel file");
+        if (taskRepository.count() == 0 && pathRepository.count() == 0) {
+            for (String path : paths) {
+                System.out.println("Path: " + path);
                 XSSFWorkbook workbook = null;
                 try {
                     workbook = new XSSFWorkbook(new FileInputStream(path));
                     XSSFSheet sheetT = workbook.getSheet("tasks");
-                    for (Iterator<Row> it = sheetT.rowIterator() ; it.hasNext() ; ) {
+                    for (Iterator<Row> it = sheetT.rowIterator(); it.hasNext(); ) {
                         Row row = it.next();
                         taskRepository.save(new Task(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue(), row.getCell(2).getStringCellValue()));
                     }
                     XSSFSheet sheetP = workbook.getSheet("paths");
-                    for (Iterator<Row> it = sheetP.rowIterator() ; it.hasNext() ; ) {
+                    for (Iterator<Row> it = sheetP.rowIterator(); it.hasNext(); ) {
                         Row row = it.next();
                         pathRepository.save(new Path(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue(), row.getCell(2).getStringCellValue()));
                     }
@@ -79,9 +80,9 @@ public class FromExcelDataLoader implements ApplicationRunner {
                         System.out.println(ioe.getMessage());
                     }
                 }
-            } else {
-                System.out.println("Database already populated");
             }
+        } else {
+            System.out.println("Database already populated");
         }
     }
 }

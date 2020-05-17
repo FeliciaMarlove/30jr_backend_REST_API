@@ -20,6 +20,7 @@ public class AdminUsersDataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("1 - Init super users");
+        //TODO : stronger passwords
         if (userRepository.findByUserRole(UserRoles.ADMIN).size() == 0) {
             userRepository.save(new User("admin@admin", "adminpassword", false, UserRoles.ADMIN));
             userRepository.save(new User("admin2@admin2", "adminpassword2", false, UserRoles.ADMIN));
