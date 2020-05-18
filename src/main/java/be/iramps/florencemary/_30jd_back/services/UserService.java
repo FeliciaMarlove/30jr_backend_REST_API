@@ -27,18 +27,18 @@ public class UserService implements CRUDService {
     BUSINESS LAYER
      */
 
-     public Message login(DTOEntity connection) {
+     public User login(DTOEntity connection) {
         String pwd = ((Connection)connection).getPassword();
         String email = ((Connection)connection).getEmail();
         for(User u: userRepository.findAll()) {
             if (u.getEmail().equals(email)) {
                 if(BCrypt.checkpw(pwd, u.getPassword())) {
-                    return new Message("Connexion réussie |ROLE "+u.getUserRole(), true);
+                    return userRepository.findByEmail(email);
                 }
-                return new Message("Mot de passe incorrect.", false);
+                return null;
             }
         }
-        return new Message("L'adresse e-mail n'existe pas.", false);
+        return null;
      }
 
     /*
