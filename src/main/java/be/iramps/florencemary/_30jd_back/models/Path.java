@@ -18,7 +18,6 @@ public class Path implements Serializable {
     private Integer pathId;
 
     @Column(name = "path_name", nullable = false, unique = true)
-    @Pattern(regexp="^^[^<>%|@;_*]*$", message="Caractères spéciaux exclus") //TODO tester et reproduire sur les champs adéquats
     private String pathName;
 
     @Column(name = "path_short_desc", nullable = false)

@@ -40,20 +40,27 @@ public class PathService implements CRUDService {
             Optional<Task> optionalTask = taskRepository.findById(taskId);
             if (optionalTask.isPresent() && optionalTask.get().isTaskActive() && !isAlreadyInPath(p, optionalTask.get())) {
                 Task task = optionalTask.get();
-                if (index >= 0 &&
-                        (index <= p.getTasks().size()
-                                ||
-                                (p.getTasks().isEmpty() && index == 0))
-                ) {
-                    p.getTasks().add(index, task);
+                if (index == 666) {
+                    p.getTasks().add(task);
+                    taskRepository.save(task);
+                    pathRepository.save(p);
+                    return new Message("Défi ajouté", true);
                 } else {
-                    return new Message("L'index n'est pas valide", false);
+                    if (index >= 0 &&
+                            (index <= p.getTasks().size() //TODO : vérifier .size ou .size + 1 ?
+                                    ||
+                                    (p.getTasks().isEmpty() && index == 0))
+                    ) {
+                        p.getTasks().add(index, task);
+                        taskRepository.save(task);
+                        pathRepository.save(p);
+                        return new Message("Défi ajouté", true);
+                    } else {
+                        return new Message("L'index n'est pas valide", false);
+                    }
                 }
-                taskRepository.save(task);
-                pathRepository.save(p);
-                return new Message("Défi ajouté", true);
             }
-            return new Message("Le défi n'existe pas, est inactif ou est déjà dans la liste", false);
+            return new Message("Le défi " + optionalTask.get().getTaskName() + " est déjà dans la liste", false);
         }
         return new Message("Le parcours n'a pas été trouvé ou est complet", false);
     }
@@ -139,6 +146,7 @@ public class PathService implements CRUDService {
                 pathRepository.save(p);
                 return new DtoUtils().convertToDto(p, new PathGet());
             } catch (Exception e) {
+                e.printStackTrace();
                 return new Message("Informations manquantes ou doublon, l'enregistrement a échoué.", false);
             }
         }

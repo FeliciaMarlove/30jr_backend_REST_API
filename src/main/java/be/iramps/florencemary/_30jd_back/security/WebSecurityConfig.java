@@ -68,8 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
                 .csrf()
                 //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()).and()
-                .disable() //TODO for test purpose
-
+                .disable() //TODO : implement csrf token
                 .authorizeRequests()
                     .antMatchers("/connection/**").permitAll()
                     .antMatchers("/api/user/**", "/api/userpath/**")

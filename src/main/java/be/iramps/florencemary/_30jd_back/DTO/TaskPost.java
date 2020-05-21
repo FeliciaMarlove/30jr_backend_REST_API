@@ -41,4 +41,13 @@ public class TaskPost implements DTOEntity {
 
     public TaskPost() {
     }
+
+    @Override
+    public String toString() {
+        return "TaskPost{" +
+                "taskName='" + taskName + '\'' +
+                ", taskShortDescription='" + taskShortDescription + '\'' +
+                ", taskLongDescription='" + taskLongDescription + '\'' +
+                '}';
+    }
 }

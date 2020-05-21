@@ -63,6 +63,7 @@ public class TaskService implements CRUDService {
                 taskRepository.save(t);
                 return new DtoUtils().convertToDto(t, new TaskGet());
             } catch (Exception e) {
+                e.printStackTrace();
                 return new Message("Informations manquantes ou doublon, l'enregistrement a échoué.", false);
             }
         }
