@@ -67,6 +67,7 @@ public class UserService implements CRUDService {
         return matcher.matches();
     }
 
+    // TODO : implémenter size 8 + 1 m 1 M 1 sp 1 #
     private boolean validatePassword(String pwdToValidate) {
         return pwdToValidate.length() >= 6;
     }

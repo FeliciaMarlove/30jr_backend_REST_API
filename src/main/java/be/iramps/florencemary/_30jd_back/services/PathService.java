@@ -42,18 +42,20 @@ public class PathService implements CRUDService {
                 Task task = optionalTask.get();
                 if (index == 666) {
                     p.getTasks().add(task);
-                    taskRepository.save(task);
+                    task.getPaths().add(p);
                     pathRepository.save(p);
+                    taskRepository.save(task);
                     return new Message("Défi ajouté", true);
                 } else {
                     if (index >= 0 &&
-                            (index <= p.getTasks().size() //TODO : vérifier .size ou .size + 1 ?
+                            (index <= p.getTasks().size()
                                     ||
                                     (p.getTasks().isEmpty() && index == 0))
                     ) {
                         p.getTasks().add(index, task);
-                        taskRepository.save(task);
+                        task.getPaths().add(p);
                         pathRepository.save(p);
+                        taskRepository.save(task);
                         return new Message("Défi ajouté", true);
                     } else {
                         return new Message("L'index n'est pas valide", false);
@@ -80,12 +82,11 @@ public class PathService implements CRUDService {
             Optional<Task> optionalTask = taskRepository.findById(taskId);
             if (optionalTask.isPresent() && p.getTasks().size() > 0) {
                 Task task = optionalTask.get();
-                if (p.getTasks().remove(task)) {
+                if (p.getTasks().remove(task) && task.getPaths().remove(p)) {
                     pathRepository.save(p);
+                    taskRepository.save(task);
                     return new Message("Défi supprimé de la liste", true);
                 }
-                //task.getPaths().remove(p);
-                //taskRepository.save(task);
             }
             return new Message("Le défi n'est pas dans la liste", false);
         }

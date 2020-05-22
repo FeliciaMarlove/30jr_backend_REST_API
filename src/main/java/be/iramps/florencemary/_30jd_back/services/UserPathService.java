@@ -59,20 +59,20 @@ public class UserPathService {
         return null;
     }
 
-    public List<UserPathHistoryObj> listHistory(Integer userId) {
-        List<UserPathHistoryObj> list = new ArrayList<>();
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if(optionalUser.isPresent()) {
-            for (UserPath up: userPathRepository.findAll()) {
-                if (up.getUser().getUserId().equals(userId) && !up.isOngoing()) {
-                    LocalDate begin = up.getPkUserPath().getDateUserPath();
-                    LocalDate end = begin.plusDays(30);
-                    list.add(new UserPathHistoryObj(up.getPath().getPathName(), end));
-                }
-            }
-        }
-        return list;
-    }
+//    public List<UserPathHistoryObj> listHistory(Integer userId) {
+//        List<UserPathHistoryObj> list = new ArrayList<>();
+//        Optional<User> optionalUser = userRepository.findById(userId);
+//        if(optionalUser.isPresent()) {
+//            for (UserPath up: userPathRepository.findAll()) {
+//                if (up.getUser().getUserId().equals(userId) && !up.isOngoing()) {
+//                    LocalDate begin = up.getPkUserPath().getDateUserPath();
+//                    LocalDate end = begin.plusDays(30);
+//                    list.add(new UserPathHistoryObj(up.getPath().getPathName(), end));
+//                }
+//            }
+//        }
+//        return list;
+//    }
 
      /*
     CRUD OPERATIONS
