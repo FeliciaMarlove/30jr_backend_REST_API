@@ -35,15 +35,6 @@ public class Path implements Serializable {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             }, mappedBy = "paths")
-//    @ManyToMany(fetch = FetchType.EAGER,
-//            cascade = {
-//                    CascadeType.PERSIST,
-//                    CascadeType.MERGE
-//            })
-//    @JoinTable(
-//            name = "task_path",
-//            joinColumns = @JoinColumn(name = "path_id"),
-//            inverseJoinColumns = @JoinColumn(name = "task_id"))
     List<Task> tasks;
 
     // GETTERS AND SETTERS
@@ -126,8 +117,8 @@ public class Path implements Serializable {
         return "Path{" +
                 "pathId=" + pathId +
                 ", pathName='" + pathName + '\'' +
-                ", pathShortDescription='" + pathShortDescription + '\'' +
-                ", pathLongDescription='" + pathLongDescription + '\'' +
+                //", pathShortDescription='" + pathShortDescription + '\'' +
+                //", pathLongDescription='" + pathLongDescription + '\'' +
                 ", pathActive=" + pathActive +
                 ", tasks=" + tasks +
                 '}';

@@ -38,11 +38,6 @@ public class Task implements Serializable {
             name = "task_path",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "path_id"))
-//    @ManyToMany(fetch = FetchType.EAGER,
-//            cascade = {
-//                    CascadeType.PERSIST,
-//                    CascadeType.MERGE
-//            }, mappedBy = "tasks")
     List<Path> paths;
 
     // GETTERS AND SETTERS
@@ -123,11 +118,11 @@ public class Task implements Serializable {
     @Override
     public String toString() {
         return "Task{" +
-                "taskId=" + taskId +
+                //"taskId=" + taskId +
                 ", taskName='" + taskName + '\'' +
-                ", taskShortDescription='" + taskShortDescription + '\'' +
-                ", taskLongDescription='" + taskLongDescription + '\'' +
-                ", taskActive=" + taskActive +
+               // ", taskShortDescription='" + taskShortDescription + '\'' +
+               // ", taskLongDescription='" + taskLongDescription + '\'' +
+               // ", taskActive=" + taskActive +
                 '}';
     }
 }
