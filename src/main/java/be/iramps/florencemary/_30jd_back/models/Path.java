@@ -30,12 +30,6 @@ public class Path implements Serializable {
     private boolean pathActive;
 
     // JOINS
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            }, mappedBy = "paths")
-    List<Task> tasks;
 
     // GETTERS AND SETTERS
     public Integer getPathId() {
@@ -74,13 +68,6 @@ public class Path implements Serializable {
         this.pathActive = pathActive;
     }
 
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
 
     // CONSTRUCTORS
 
@@ -89,7 +76,6 @@ public class Path implements Serializable {
         this.pathShortDescription = pathShortDescription;
         this.pathLongDescription = pathLongDescription;
         this.pathActive = false;
-        this.tasks = new ArrayList<>();
     }
 
     public Path() {
@@ -109,7 +95,7 @@ public class Path implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(pathId, pathName, pathShortDescription, pathLongDescription, pathActive, tasks);
+        return Objects.hash(pathId, pathName, pathShortDescription, pathLongDescription, pathActive);
     }
 
     @Override
@@ -120,7 +106,6 @@ public class Path implements Serializable {
                 //", pathShortDescription='" + pathShortDescription + '\'' +
                 //", pathLongDescription='" + pathLongDescription + '\'' +
                 ", pathActive=" + pathActive +
-                ", tasks=" + tasks +
                 '}';
     }
 }

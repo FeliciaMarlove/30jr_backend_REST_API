@@ -29,16 +29,6 @@ public class Task implements Serializable {
     private boolean taskActive;
 
     // JOINS
-    @ManyToMany(fetch = FetchType.EAGER,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
-    @JoinTable(
-            name = "task_path",
-            joinColumns = @JoinColumn(name = "task_id"),
-            inverseJoinColumns = @JoinColumn(name = "path_id"))
-    List<Path> paths;
 
     // GETTERS AND SETTERS
 
@@ -78,14 +68,6 @@ public class Task implements Serializable {
         this.taskActive = taskActive;
     }
 
-    public List<Path> getPaths() {
-        return paths;
-    }
-
-    public void setPaths(List<Path> paths) {
-        this.paths = paths;
-    }
-
     // CONSTRUCTORS
 
     public Task(String taskName, String taskShortDescription, String taskLongDescription) {
@@ -93,7 +75,6 @@ public class Task implements Serializable {
         this.taskShortDescription = taskShortDescription;
         this.taskLongDescription = taskLongDescription;
         this.taskActive = true;
-        this.paths = new ArrayList<>();
     }
 
     public Task() {
@@ -112,7 +93,7 @@ public class Task implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(taskId, taskName, taskShortDescription, taskLongDescription, taskActive, paths);
+        return Objects.hash(taskId, taskName, taskShortDescription, taskLongDescription, taskActive);
     }
 
     @Override

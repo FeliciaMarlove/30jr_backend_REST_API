@@ -46,7 +46,6 @@ public class PK_User_Path implements Serializable {
         this.dateUserPath = dateUserPath;
     }
 
-
     // CONSTRUCTORS
 
     public PK_User_Path() {

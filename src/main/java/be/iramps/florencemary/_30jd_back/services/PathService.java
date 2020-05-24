@@ -3,8 +3,10 @@ package be.iramps.florencemary._30jd_back.services;
 import be.iramps.florencemary._30jd_back.DTO.*;
 import be.iramps.florencemary._30jd_back.models.Path;
 import be.iramps.florencemary._30jd_back.models.Task;
+import be.iramps.florencemary._30jd_back.models.TaskPath;
 import be.iramps.florencemary._30jd_back.models.UserPath;
 import be.iramps.florencemary._30jd_back.repositories.PathRepository;
+import be.iramps.florencemary._30jd_back.repositories.TaskPathRepository;
 import be.iramps.florencemary._30jd_back.repositories.TaskRepository;
 import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +23,14 @@ public class PathService implements CRUDService {
     private PathRepository pathRepository;
     private UserPathRepository userPathRepository;
     private TaskRepository taskRepository;
+    private TaskPathRepository taskPathRepository;
 
     @Autowired
-    public PathService(PathRepository pathRepository, UserPathRepository userPathRepository, TaskRepository taskRepository) {
+    public PathService(PathRepository pathRepository, UserPathRepository userPathRepository, TaskRepository taskRepository, TaskPathRepository taskPathRepository) {
         this.pathRepository = pathRepository;
         this.userPathRepository = userPathRepository;
         this.taskRepository = taskRepository;
+        this.taskPathRepository = taskPathRepository;
     }
 
     /*
@@ -34,28 +39,35 @@ public class PathService implements CRUDService {
 
     @Transactional
     public Message addTask(Integer pathId, Integer taskId, Integer index) {
+        int size = listTasks(pathId).size();
         Optional<Path> optionalPath = pathRepository.findById(pathId);
-        if (optionalPath.isPresent() && optionalPath.get().getTasks().size() < 30) {
+        if (optionalPath.isPresent() &&  size < 30) {
             Path p = optionalPath.get();
             Optional<Task> optionalTask = taskRepository.findById(taskId);
             if (optionalTask.isPresent() && optionalTask.get().isTaskActive() && !isAlreadyInPath(p, optionalTask.get())) {
                 Task task = optionalTask.get();
-                if (index == 99999) {
-                    p.getTasks().add(task);
-                    task.getPaths().add(p);
-                    pathRepository.save(p);
-                    taskRepository.save(task);
+                if (index == -1) {
+                    TaskPath tp = new TaskPath(task, p, 0);
+                    taskPathRepository.save(tp);
                     return new Message("Défi ajouté", true);
                 } else {
                     if (index >= 0 &&
-                            (index <= p.getTasks().size()
+                            (index <= size
                                     ||
-                                    (p.getTasks().isEmpty() && index == 0))
+                                    (listTasks(pathId).isEmpty() && index == 0))
                     ) {
-                        p.getTasks().add(index, task);
-                        task.getPaths().add(p);
-                        pathRepository.save(p);
-                        taskRepository.save(task);
+                        Optional<TaskPath> optionalTaskPath = taskPathRepository.findByPathAndTask(p, task);
+                        if (optionalTaskPath.isPresent()) {
+                            TaskPath tp = optionalTaskPath.get();
+                            for(TaskPath each: taskPathRepository.findAll()) {
+                                if (each.getPath().getPathId().equals(pathId)
+                                && each.getPosition() >= index) {
+                                    each.setPosition(each.getPosition() + 1);
+                                }
+                            }
+                            tp.setPosition(index);
+                            taskPathRepository.save(tp);
+                        }
                         return new Message("Défi ajouté", true);
                     } else {
                         return new Message("L'index n'est pas valide", false);
@@ -68,8 +80,8 @@ public class PathService implements CRUDService {
     }
 
     private boolean isAlreadyInPath(Path path, Task task) {
-        for(Task t: path.getTasks()) {
-            if (t.equals(task)) return true;
+        for(DTOEntity t: listTasks(path.getPathId())) {
+            if (((TaskGet)(t)).getTaskId().equals(task.getTaskId())) return true;
         }
         return false;
     }
@@ -80,17 +92,15 @@ public class PathService implements CRUDService {
         if (optionalPath.isPresent()) {
             Path p = optionalPath.get();
             Optional<Task> optionalTask = taskRepository.findById(taskId);
-            if (optionalTask.isPresent() && p.getTasks().size() > 0) {
+            if (optionalTask.isPresent() && listTasks(pathId).contains(optionalTask.get())) {
                 Task task = optionalTask.get();
-                if (p.getTasks().remove(task) && task.getPaths().remove(p)) {
-                    pathRepository.save(p);
-                    taskRepository.save(task);
-                    return new Message("Défi supprimé de la liste", true);
-                }
+                TaskPath toDelete = taskPathRepository.findByPathAndTask(p, task).get();
+                taskPathRepository.delete(toDelete);
+                return new Message("Défi supprimé de la liste", true);
             }
-            return new Message("Le défi n'est pas dans la liste", false);
+            return new Message("Le défi " + taskId + " n'est pas dans la liste", false);
         }
-        return new Message("L'ID du parcours n'a pas été trouvé", false);
+        return new Message("Le parcours " + pathId + " n'a pas été trouvé", false);
     }
 
     /*
@@ -99,11 +109,18 @@ public class PathService implements CRUDService {
 
     public List<DTOEntity> listTasks(Integer id) {
         List<DTOEntity> list = new ArrayList<>();
+        List<TaskPath> tpList = new ArrayList<>();
         Optional<Path> optionalPath = pathRepository.findById(id);
         if (optionalPath.isPresent()) {
-            for (Task t: optionalPath.get().getTasks()) {
-                list.add(new DtoUtils().convertToDto(t, new TaskGet()));
+            for (TaskPath tp: taskPathRepository.findAll()) {
+                if (tp.getPath().getPathId().equals(id)) {
+                    tpList.add(tp);
+                }
             }
+        }
+        Collections.sort(tpList);
+        for (TaskPath tp: tpList) {
+            list.add(new DtoUtils().convertToDto(tp.getPath(), new TaskGet()));
         }
         return list;
     }
