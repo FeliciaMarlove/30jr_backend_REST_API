@@ -40,7 +40,7 @@ public class PathService implements CRUDService {
             Optional<Task> optionalTask = taskRepository.findById(taskId);
             if (optionalTask.isPresent() && optionalTask.get().isTaskActive() && !isAlreadyInPath(p, optionalTask.get())) {
                 Task task = optionalTask.get();
-                if (index == 666) {
+                if (index == 99999) {
                     p.getTasks().add(task);
                     task.getPaths().add(p);
                     pathRepository.save(p);
