@@ -46,8 +46,16 @@ public class PathService implements CRUDService {
             Optional<Task> optionalTask = taskRepository.findById(taskId);
             if (optionalTask.isPresent() && optionalTask.get().isTaskActive() && !isAlreadyInPath(p, optionalTask.get())) {
                 Task task = optionalTask.get();
+                // index "-1" means "no index was specified"
                 if (index == -1) {
-                    TaskPath tp = new TaskPath(task, p, 0);
+                    if (taskPathRepository.findByPath(p).isEmpty()) {
+                        TaskPath tp = new TaskPath(task, p, 0);
+                        taskPathRepository.save(tp);
+                        return new Message("Défi ajouté", true);
+                    }
+                    List<TaskPath> all = taskPathRepository.findByPathOrderByPosition(p);
+                    Integer higherPosition = all.get(all.size()-1).getPosition();
+                    TaskPath tp = new TaskPath(task, p, higherPosition+1);
                     taskPathRepository.save(tp);
                     return new Message("Défi ajouté", true);
                 } else {
@@ -120,7 +128,7 @@ public class PathService implements CRUDService {
         }
         Collections.sort(tpList);
         for (TaskPath tp: tpList) {
-            list.add(new DtoUtils().convertToDto(tp.getPath(), new TaskGet()));
+            list.add(new DtoUtils().convertToDto(tp.getTask(), new TaskGet()));
         }
         return list;
     }

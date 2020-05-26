@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface TaskPathRepository extends CrudRepository<TaskPath, PK_Task_Path> {
     Optional<TaskPath> findByPkTaskPath(PK_Task_Path pk_task_path);
     Optional<List<TaskPath>> findByPath(Path path);
+    List<TaskPath> findByPathOrderByPosition(Path path);
     TaskPath findByPathAndPosition(Path path, Integer postion);
     Optional<TaskPath> findByPathAndTask(Path path, Task task);
 }
