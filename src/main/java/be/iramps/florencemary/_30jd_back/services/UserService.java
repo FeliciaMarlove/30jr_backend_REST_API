@@ -27,13 +27,13 @@ public class UserService implements CRUDService {
     BUSINESS LAYER
      */
 
-     public User login(DTOEntity connection) {
+     public DTOEntity login(DTOEntity connection) {
         String pwd = ((Connection)connection).getPassword();
         String email = ((Connection)connection).getEmail();
         for(User u: userRepository.findAll()) {
             if (u.getEmail().equals(email)) {
                 if(BCrypt.checkpw(pwd, u.getPassword())) {
-                    return userRepository.findByEmail(email);
+                    return new DtoUtils().convertToDto(userRepository.findByEmail(email), new UserGet());
                 }
                 return null;
             }
@@ -75,10 +75,9 @@ public class UserService implements CRUDService {
     @Override
     public DTOEntity create(DTOEntity dtoEntity) {
         if (!validateEmail(((UserPost)dtoEntity).getEmail())) return new Message("Le format de l'e-mail est incorrect", false);
-        if (!validatePassword(((UserPost)dtoEntity).getPassword())) return new Message("Le mot de passe doit comporter au moins 6 caractères", false);
+        if (!validatePassword(((UserPost)dtoEntity).getPassword())) return new Message("Le mot de passe doit 8 caractères dont au moins 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial. Les caractères accentués ne sont pas acceptés.", false);
         if(userRepository.findByEmail(((UserPost)dtoEntity).getEmail()) == null) {
             User u = (User)new DtoUtils().convertToEntity(new User(), dtoEntity);
-            System.out.println(u);
             try {
                 u.setUserRole(UserRoles.USER);
                 userRepository.save(u);
@@ -115,9 +114,5 @@ public class UserService implements CRUDService {
             return new Message("Utilisateur avec l'ID " + id + " supprimé", true);
         }
         return new Message("L'utilisateur n'a pas été trouvé.", false);
-    }
-
-    public User getByEmail(String email) {
-        return userRepository.findByEmail(email);
     }
 }
