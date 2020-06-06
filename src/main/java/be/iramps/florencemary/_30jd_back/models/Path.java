@@ -4,31 +4,50 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Parcours
+ */
 @Entity
 @Table(name = "path", schema = "public", catalog = "_30jd")
 public class Path implements Serializable {
 
+    /**
+     * Integer Id auto-incrémenté
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "path_generator")
     @SequenceGenerator(name = "path_generator", allocationSize = 1, initialValue = 1)
     @Column(name = "path_id")
     private Integer pathId;
 
+    /**
+     * String nom
+     */
     @Column(name = "path_name", nullable = false, unique = true)
     private String pathName;
 
+    /**
+     * String description courte
+     */
     @Column(name = "path_short_desc", nullable = false)
     private String pathShortDescription;
 
+    /**
+     * String description longue
+     */
     @Column(name = "path_long_desc", length = 1000)
     private String pathLongDescription;
 
+    /**
+     * boolean statut (actif/inactif)
+     */
     @Column(name = "path_active", nullable = false)
     private boolean pathActive;
 
     // JOINS
 
     // GETTERS AND SETTERS
+
     public Integer getPathId() {
         return pathId;
     }

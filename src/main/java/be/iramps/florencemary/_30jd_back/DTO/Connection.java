@@ -1,5 +1,8 @@
 package be.iramps.florencemary._30jd_back.DTO;
 
+/**
+ * DTO POST Connexion
+ */
 public class Connection implements DTOEntity {
     private String email;
     private String password;

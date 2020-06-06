@@ -2,6 +2,9 @@ package be.iramps.florencemary._30jd_back.DTO;
 
 import java.time.LocalDate;
 
+/*
+Non utilisé
+ */
 public class UserPathHistoryObj {
     private String pathName;
     private LocalDate dateEnd;

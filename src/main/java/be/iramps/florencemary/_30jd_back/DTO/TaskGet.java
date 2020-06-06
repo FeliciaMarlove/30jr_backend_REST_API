@@ -1,5 +1,8 @@
 package be.iramps.florencemary._30jd_back.DTO;
 
+/**
+ * DTO GET tâche
+ */
 public class TaskGet implements DTOEntity {
     private Integer taskId;
     private String taskName;

@@ -1,5 +1,8 @@
 package be.iramps.florencemary._30jd_back.DTO;
 
+/**
+ * DTO GET Message
+ */
 public class Message implements DTOEntity {
     private String msg;
     private boolean aBoolean;

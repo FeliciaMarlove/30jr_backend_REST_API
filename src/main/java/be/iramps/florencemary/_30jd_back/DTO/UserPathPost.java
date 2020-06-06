@@ -1,5 +1,8 @@
 package be.iramps.florencemary._30jd_back.DTO;
 
+/**
+ * DTO POST relation utilisateur-parcours
+ */
 public class UserPathPost implements DTOEntity {
     private Integer pathId;
     private Integer userId;

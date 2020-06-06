@@ -2,6 +2,9 @@ package be.iramps.florencemary._30jd_back.DTO;
 
 import be.iramps.florencemary._30jd_back.security.UserRoles;
 
+/**
+ * DTO GET utilisateur
+ */
 public class UserGet implements DTOEntity {
     private Integer userId;
     private String email;

@@ -6,6 +6,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+/**
+ * Modélise un principal pour l'authentification
+ * Implémentation standard de l'interface UserDetails
+ */
 public class ApplicationUser implements UserDetails {
 
     private final User user;

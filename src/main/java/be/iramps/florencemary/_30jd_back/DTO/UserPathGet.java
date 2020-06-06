@@ -2,6 +2,9 @@ package be.iramps.florencemary._30jd_back.DTO;
 
 import be.iramps.florencemary._30jd_back.models.PK_User_Path;
 
+/**
+ * DTO GET relation utilisateur-parcours
+ */
 public class UserPathGet  implements DTOEntity {
     private PK_User_Path pkUserPath;
     private boolean ongoing;

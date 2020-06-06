@@ -1,5 +1,8 @@
 package be.iramps.florencemary._30jd_back.DTO;
 
+/**
+ * DTO POST parcours
+ */
 public class PathPost implements DTOEntity {
     private String pathName;
     private String pathShortDescription;

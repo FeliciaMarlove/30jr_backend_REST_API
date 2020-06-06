@@ -1,5 +1,8 @@
 package be.iramps.florencemary._30jd_back.DTO;
 
+/**
+ * DTO GET parcours
+ */
 public class PathGet implements DTOEntity {
     private Integer pathId;
     private String pathName;

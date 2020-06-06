@@ -12,6 +12,9 @@ import org.springframework.web.util.WebUtils;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * Gestionnaire d'erreurs liées à l'API REST
+ */
 @ControllerAdvice
 public class ExceptionController {
 

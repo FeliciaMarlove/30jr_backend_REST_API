@@ -1,5 +1,8 @@
 package be.iramps.florencemary._30jd_back.DTO;
 
+/**
+ * DTO POST tâche
+ */
 public class TaskPost implements DTOEntity {
     private String taskName;
     private String taskShortDescription;

@@ -9,6 +9,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+/**
+ * Récupère l'utilisateur en base de données
+ */
 @Service
 public class ApplicationUserService implements UserDetailsService {
 
@@ -19,6 +22,12 @@ public class ApplicationUserService implements UserDetailsService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Récupère l'utilisateur en base de données
+     * @param username identifiant utilisé pour la connexion
+     * @return ApplicationUser le principal
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(username);
