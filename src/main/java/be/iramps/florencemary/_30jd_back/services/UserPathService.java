@@ -6,7 +6,6 @@ import be.iramps.florencemary._30jd_back.repositories.PathRepository;
 import be.iramps.florencemary._30jd_back.repositories.TaskPathRepository;
 import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
 import be.iramps.florencemary._30jd_back.repositories.UserRepository;
-import be.iramps.florencemary._30jd_back.DTO.UserPathHistoryObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,26 +37,30 @@ public class UserPathService {
 
     @Transactional
     public DTOEntity seeTaskOfTheDay(Integer userId) {
-        Optional<User> optionalUser = userRepository.findById(userId);
-        if(optionalUser.isPresent()) {
-            User u = optionalUser.get();
-            for (UserPath up: userPathRepository.findAll()) {
-                if(up.getUser().getUserId().equals(userId) && up.isOngoing()) {
-                    LocalDate dateBegin = up.getPkUserPath().getDateUserPath();
-                    LocalDate today = LocalDate.now();
-                    int deltaDays = Period.between(dateBegin, today).getDays();
-                    Path p = up.getPath();
-                    if (deltaDays < taskPathRepository.findByPath(p).get().size()) {
-                        return new DtoUtils().convertToDto(taskPathRepository.findByPathAndPosition(p, deltaDays), new TaskGet());
-                    } else {
-                        up.setOngoing(false);
-                        userPathRepository.save(up);
-                        u.setBusy(false);
-                        userRepository.save(u);
-                        return null;
-                    }
-                }
+        UserPath up = findUserPathOfUser(userId);
+        User u = userRepository.findById(userId).get();
+        if (up != null) {
+            int deltaDays = getDayIndex(userId);
+            Path p = up.getPath();
+            if (deltaDays < taskPathRepository.findByPath(p).get().size()) {
+                return new DtoUtils().convertToDto(taskPathRepository.findByPathAndPosition(p, deltaDays), new TaskGet());
+            } else {
+                up.setOngoing(false);
+                userPathRepository.save(up);
+                u.setBusy(false);
+                userRepository.save(u);
+                return null;
             }
+        }
+        return null;
+    }
+
+    public Integer getDayIndex(Integer userId) {
+        UserPath up = findUserPathOfUser(userId);
+        if (up != null) {
+            LocalDate dateBegin = up.getPkUserPath().getDateUserPath();
+            LocalDate today = LocalDate.now();
+            return Period.between(dateBegin, today).getDays();
         }
         return null;
     }
@@ -65,6 +68,18 @@ public class UserPathService {
      /*
     CRUD OPERATIONS
      */
+
+     private UserPath findUserPathOfUser(Integer userId) {
+         Optional<User> optionalUser = userRepository.findById(userId);
+         if(optionalUser.isPresent()) {
+             for (UserPath up: userPathRepository.findAll()) {
+                 if(up.getUser().getUserId().equals(userId) && up.isOngoing()) {
+                    return up;
+                 }
+             }
+         }
+         return null;
+     }
 
     public List<DTOEntity> readPaths() {
         List<DTOEntity> list = new ArrayList<>();

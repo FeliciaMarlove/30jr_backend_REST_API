@@ -4,14 +4,13 @@ import be.iramps.florencemary._30jd_back.DTO.DTOEntity;
 import be.iramps.florencemary._30jd_back.DTO.UserPathPost;
 import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
 import be.iramps.florencemary._30jd_back.services.UserPathService;
-import be.iramps.florencemary._30jd_back.DTO.UserPathHistoryObj;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 /**
- * Contrôleur Admin (CRUD sur les parcours)
+ * Contrôleur Admin (CRUD sur les parcours/utilisateur)
  */
 @RestController
 @RequestMapping(value = "/api/userpath")
@@ -33,13 +32,13 @@ public class UserPathController {
     public DTOEntity create(@RequestBody UserPathPost userPath) { return this.service.create(userPath); }
 
     @GetMapping("/{userId}")
-    public DTOEntity read(@PathVariable("userId") Integer userId) {
+    public DTOEntity seeTaskOfTheDay(@PathVariable("userId") Integer userId) {
         return this.service.seeTaskOfTheDay(userId);
     }
 
-    @GetMapping("/{userId}/today")
-    public DTOEntity seeTaskOfDay(@PathVariable("userId") Integer userId) {
-        return this.service.seeTaskOfTheDay(userId);
+    @GetMapping("/{userId}/day")
+    public Integer getDay(@PathVariable("userId") Integer userId) {
+        return this.service.getDayIndex(userId)+1;
     }
 
     @GetMapping("/paths")
