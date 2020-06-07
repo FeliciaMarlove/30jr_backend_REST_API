@@ -60,7 +60,8 @@ public class UserPathController {
      */
     @GetMapping("/{userId}/day")
     public Integer getDay(@PathVariable("userId") Integer userId) {
-        return this.service.getDayIndex(userId) + 1;
+        Object result = this.service.getDayIndex(userId);
+        return result != null ? (Integer)result + 1 : null;
     }
 
     /**

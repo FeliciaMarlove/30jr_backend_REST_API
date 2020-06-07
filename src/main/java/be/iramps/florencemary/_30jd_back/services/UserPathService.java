@@ -57,7 +57,7 @@ public class UserPathService {
 
     public Integer getDayIndex(Integer userId) {
         UserPath up = findUserPathOfUser(userId);
-        if (up != null) {
+        if (up != null && up.isOngoing()) {
             LocalDate dateBegin = up.getPkUserPath().getDateUserPath();
             LocalDate today = LocalDate.now();
             return Period.between(dateBegin, today).getDays();

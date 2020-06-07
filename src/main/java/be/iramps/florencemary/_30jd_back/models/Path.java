@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Parcours
+ * Modèle : Parcours
  */
 @Entity
 @Table(name = "path", schema = "public", catalog = "_30jd")
