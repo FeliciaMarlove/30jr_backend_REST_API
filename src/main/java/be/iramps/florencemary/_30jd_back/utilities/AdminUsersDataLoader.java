@@ -1,7 +1,5 @@
 package be.iramps.florencemary._30jd_back.utilities;
 
-import be.iramps.florencemary._30jd_back.models.Path;
-import be.iramps.florencemary._30jd_back.models.Task;
 import be.iramps.florencemary._30jd_back.models.User;
 import be.iramps.florencemary._30jd_back.security.UserRoles;
 import be.iramps.florencemary._30jd_back.repositories.UserRepository;
@@ -19,15 +17,27 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
+/**
+ * Création des utilisateurs administrateurs depuis un fichier Excel
+ * Exécuté au lancement de l'application
+ */
 @Order(1)
 @Component
 public class AdminUsersDataLoader implements ApplicationRunner {
     private UserRepository userRepository;
+    /**
+     * String le chemin du fichier Excel chargé
+     */
     private String path = "./src/main/resources/admin_loader.xlsx";
 
     @Autowired
     public AdminUsersDataLoader(UserRepository userRepository)  { this.userRepository = userRepository; }
 
+    /**
+     * Crée des utilisateurs administrateurs sur base d'un fichier Excel structuré
+     * @param args ApplicationArguments
+     * @throws Exception
+     */
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("1 - Init admin users");

@@ -38,6 +38,12 @@
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-text -->
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-text</artifactId>-->
+<!--            <version>1.8</version>-->
+<!--        </dependency>-->
         <!--SPRING SECURITY DEPENDENCIES-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Chargement de parcours et tâches depuis un fichier Excel
+ * Exécuté au lancement de l'application
+ */
 @Order(2)
 @Component
 public class FromExcelDataLoader implements ApplicationRunner {
@@ -28,7 +32,7 @@ public class FromExcelDataLoader implements ApplicationRunner {
     private PathRepository pathRepository;
     private String path1 = "./src/main/resources/dataloader.xlsx";
     private String path2 = "./src/main/resources/dataloader_duplicate.xlsx"; // for test purpose: meant not to be loaded bc of duplicate names
-    private String path3 = "./src/main/resources/dataloader_empty_long.xlsx"; // for test purpose: set of Paths/Tasks with empty long descriptions
+    private String path3 = "./src/main/resources/dataloader_empty_long.xlsx";
     /*
     additional paths to be declared here
     example:
@@ -37,6 +41,9 @@ public class FromExcelDataLoader implements ApplicationRunner {
     private List<String> paths = new ArrayList<>();
     private FileInputStream inputStream = null;
 
+    /*
+    additional paths to be added in the paths list here :
+     */
     {
         paths.add(path1);
         paths.add(path2);
@@ -49,6 +56,11 @@ public class FromExcelDataLoader implements ApplicationRunner {
         this.pathRepository = pathRepository;
     }
 
+    /**
+     * Charge les tâches et parcours depuis une liste de fichiers Excel si la base de données parcours et tâches est vide
+     * @param args
+     * @throws Exception
+     */
     @Override
     public void run(ApplicationArguments args) throws Exception {
         System.out.println("2 - Load tasks and paths from Excel file");
@@ -61,6 +73,12 @@ public class FromExcelDataLoader implements ApplicationRunner {
         }
     }
 
+    /**
+     * Parcourt un fichier Excel structuré et crée des tâches et parcours en base de données
+     * Transaction
+     * Gère les exceptions relatives à la manipulation de fichiers
+     * @param path String chemin vers un fichier Excel structuré
+     */
     @Transactional
     public void loadInDB(String path) {
         System.out.println("Path: " + path);

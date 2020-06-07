@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Couche logique parcours
+ */
 @Service
 public class PathService implements CRUDService {
     private PathRepository pathRepository;
@@ -37,10 +40,22 @@ public class PathService implements CRUDService {
     BUSINESS LAYER
      */
 
+    /**
+     * Ajoute une tâche dans un parcours
+     * Transaction
+     * Si le parcours existe et que la taille de la liste de tâches < 30, vérifie que la tâche existe, est active et n'est pas déjà dans le parcours
+     * Si l'indice == -99, ajoute la tâche à la fin de la liste
+     * Si l'indice est valide, ajoute la tâche à l'indice précisé et décale les tâches suivantes dans la liste (position +1)
+     * L'indice est valide s'il est >=0 et compris dans les limites de la liste (<= size)
+     * @param pathId Integer l'ID du parcours
+     * @param taskId Integer l'ID de la tâche à ajouter
+     * @param index Integer l'indice de position dans la liste de tâches du parcours
+     * @return Message un message de réussite ou d'échec en fonction du résultat obtenu (String, booléen)
+     */
     @Transactional
     public Message addTask(Integer pathId, Integer taskId, Integer index) {
-        int size = listTasks(pathId).size();
         Optional<Path> optionalPath = pathRepository.findById(pathId);
+        int size = listTasks(pathId).size();
         if (optionalPath.isPresent() && size < 30) {
             Path p = optionalPath.get();
             Optional<Task> optionalTask = taskRepository.findById(taskId);
@@ -84,13 +99,15 @@ public class PathService implements CRUDService {
         return new Message("Le parcours n'a pas été trouvé ou est complet", false);
     }
 
-    private boolean isAlreadyInPath(Path path, Task task) {
-        for (DTOEntity t : listTasks(path.getPathId())) {
-            if (((TaskGet) (t)).getTaskId().equals(task.getTaskId())) return true;
-        }
-        return false;
-    }
-
+    /**
+     * Supprime un défi d'un parcours
+     * Transaction
+     * Si le parcours existe, vérifie que le défi existe et est présent dans la liste de tâches du parcours
+     * Supprime le défi de la liste de défis du parcours
+     * @param pathId Integer l'ID du parcours
+     * @param taskId Integer l'ID de la tâche
+     * @return Message un message de réussite ou d'échec en fonction du résultat obtenu (String, booléen)
+     */
     @Transactional
     public Message removeTask(Integer pathId, Integer taskId) {
         Optional<Path> optionalPath = pathRepository.findById(pathId);
@@ -108,10 +125,12 @@ public class PathService implements CRUDService {
         return new Message("Le parcours " + pathId + " n'a pas été trouvé", false);
     }
 
-    /*
-    CRUD OPERATIONS
+    /**
+     * Retourne la liste des tâches d'un parcours sous forme de DTO GET
+     * Trie la liste sur base des positions dans la relation tâche-parcours
+     * @param id Integer l'ID du parcours
+     * @return List DTOEntity la liste
      */
-
     public List<DTOEntity> listTasks(Integer id) {
         List<DTOEntity> list = new ArrayList<>();
         List<TaskPath> tpList = new ArrayList<>();
@@ -130,6 +149,31 @@ public class PathService implements CRUDService {
         return list;
     }
 
+    // private methods
+
+    private boolean isAlreadyInPath(Path path, Task task) {
+        for (DTOEntity t : listTasks(path.getPathId())) {
+            if (((TaskGet) (t)).getTaskId().equals(task.getTaskId())) return true;
+        }
+        return false;
+    }
+
+    private boolean pathIsUsed(Integer id) {
+        for (UserPath up : userPathRepository.findAll()) {
+            if ((up.getPath().getPathId().equals(id) && up.isOngoing())) return true;
+        }
+        return false;
+    }
+
+    /*
+    CRUD OPERATIONS
+     */
+
+    /**
+     * Retourne un parcours sous forme de DTO GET
+     * @param id Integer l'ID du parcours
+     * @return DTOEntity le parcours
+     */
     @Override
     public DTOEntity read(Integer id) {
         Optional<Path> optPath = pathRepository.findById(id);
@@ -137,6 +181,10 @@ public class PathService implements CRUDService {
                 new DtoUtils().convertToDto(optPath.get(), new PathGet()) : new Message("Le parcours n'a pas été trouvé", false);
     }
 
+    /**
+     * Retourne la liste des parcours en base de données sous forme de DTOs
+     * @return List DTOEntity la liste des parcours
+     */
     @Override
     public List<DTOEntity> read() {
         List<DTOEntity> list = new ArrayList<>();
@@ -144,6 +192,12 @@ public class PathService implements CRUDService {
         return list;
     }
 
+    /**
+     * Crée un parcours en base de données
+     * Gère les erreurs en cas de données manquantes ou de doublon
+     * @param dtoEntity DTOEntity le parcours sous forme de DTO POST
+     * @return DTOEntity le parcours créé (DTO GET) en cas de réussite ou un Message(String, booléen) en cas d'échec
+     */
     @Override
     public DTOEntity create(DTOEntity dtoEntity) {
         if (pathRepository.findByPathName(((PathPost) dtoEntity).getPathName()) == null) {
@@ -152,12 +206,20 @@ public class PathService implements CRUDService {
                 pathRepository.save(p);
                 return new DtoUtils().convertToDto(p, new PathGet());
             } catch (Exception e) {
+                System.out.println("Creating a path failed: " + e.getMessage());
                 return new Message("Informations manquantes, l'enregistrement a échoué.", false);
             }
         }
         return new Message("Le nom du parcours existe déjà, l'enregistrement a échoué.", false);
     }
 
+    /**
+     * Mettre à jour un parcours
+     * Gère les erreurs en cas de données manquantes ou de doublon
+     * @param id Integer l'ID du parcours à mettre à jour
+     * @param dtoEntity DTOEntity le parcours à mettre à jour sous forme de DTO POST
+     * @return DTOEntity le parcours mis à jour (DTO GET) en cas de réussite ou un Message(String, booléen) en cas d'échec
+     */
     @Override
     public DTOEntity update(Integer id, DTOEntity dtoEntity) {
         if (pathRepository.existsById(id)) {
@@ -176,6 +238,12 @@ public class PathService implements CRUDService {
         return new Message("Le parcours avec l'ID " + id + " n'a pas été trouvé, l'enregistrement a échoué.", false);
     }
 
+    /**
+     * Désactive un parcours
+     * Vérifie que le parcours n'est pas en cours auprès d'un utilisateur
+     * @param id Integer l'ID du parcours à désactiver
+     * @return DTOEntity le parcours désactivé (DTO GET) ou un Message(String, booléen) en cas d'échec
+     */
     @Override
     public DTOEntity delete(Integer id) {
         Optional<Path> optPath = pathRepository.findById(id);
@@ -187,6 +255,11 @@ public class PathService implements CRUDService {
         return new Message("La parcours avec l'ID " + id + " n'a pas été trouvé.", false);
     }
 
+    /**
+     * Active un parcours
+     * @param id Integer l'ID du parcours à activer
+     * @return DTOEntity le parcours activé (DTO GET) ou un Message(String, booléen) en cas d'échec
+     */
     public DTOEntity activate(Integer id) {
         Optional<Path> optPath = pathRepository.findById(id);
         if (optPath.isPresent()) {
@@ -197,10 +270,5 @@ public class PathService implements CRUDService {
         return new Message("La parcours avec l'ID " + id + " n'a pas été trouvé.", false);
     }
 
-    private boolean pathIsUsed(Integer id) {
-        for (UserPath up : userPathRepository.findAll()) {
-            if ((up.getPath().getPathId().equals(id) && up.isOngoing())) return true;
-        }
-        return false;
-    }
+
 }

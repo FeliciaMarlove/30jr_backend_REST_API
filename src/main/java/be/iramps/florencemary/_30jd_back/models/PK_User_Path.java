@@ -6,15 +6,31 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
+/**
+ * Modèle : Clé primaire de la relation Utilisateur-Parcours
+ * Clé composée
+ */
 @Embeddable
 public class PK_User_Path implements Serializable {
 
+    /**
+     * Integer l'ID de l'utilisateur
+     * Non null
+     */
     @Column(name = "user_id", nullable = false)
     private Integer userId;
 
+    /**
+     * Integer l'ID du parcours
+     * Non null
+     */
     @Column(name = "path_id", nullable = false)
     private Integer pathId;
 
+    /**
+     * LocalDate la date de création
+     * Non null
+     */
     @Column(name = "date_begin", nullable = false)
     private LocalDate dateUserPath;
 
@@ -22,26 +38,50 @@ public class PK_User_Path implements Serializable {
 
     // GETTERS AND SETTERS
 
+    /**
+     * Retourne l'ID de l'utilisateur
+     * @return Integer l'ID
+     */
     public Integer getUserId() {
         return userId;
     }
 
+    /**
+     * Définit l'ID de l'utilisateur
+     * @param userId Integer l'ID
+     */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
+    /**
+     * Retourn l'ID du parcours
+     * @return Integer l'ID
+     */
     public Integer getPathId() {
         return pathId;
     }
 
+    /**
+     * Définit l'ID du parcours
+     * @param pathId Integer l'ID
+     */
     public void setPathId(Integer pathId) {
         this.pathId = pathId;
     }
 
+    /**
+     * Retourne la date de création
+     * @return LocalDate la date
+     */
     public LocalDate getDateUserPath() {
         return dateUserPath;
     }
 
+    /**
+     * Définit la date de création
+     * @param dateUserPath LocalDate la date
+     */
     public void setDateUserPath(LocalDate dateUserPath) {
         this.dateUserPath = dateUserPath;
     }
@@ -51,6 +91,12 @@ public class PK_User_Path implements Serializable {
     public PK_User_Path() {
     }
 
+    /**
+     * Constructeur de la clé composée
+     * Définit dateUserPath = LocalDate.now()
+     * @param userId Integer l'ID de l'utilisateur
+     * @param pathId Integer l'ID du parcours
+     */
     public PK_User_Path(Integer userId, Integer pathId) {
         this.userId = userId;
         this.pathId = pathId;

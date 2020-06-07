@@ -6,6 +6,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Enumération des rôles utilisateurs (AuthN) et attribution des permissions par rôle
+ */
 public enum UserRoles {
     ADMIN(Sets.newHashSet(UserPermission.ADMINISTRATION)),
     USER(Sets.newHashSet(UserPermission.ENDUSERRIGHTS));

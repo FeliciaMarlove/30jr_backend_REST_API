@@ -35,6 +35,15 @@ public class UserPathService {
     BUSINESS LAYER
      */
 
+    /**
+     * Retourne la tâche du jour d'un utilisateur
+     * Transaction
+     * Vérifie qu'une relation utilisateur-parcours en cours existe
+     * Récupère la tâche du jour sur base du nombre de jours écoulés entre aujourd'hui et le début du parcours
+     * Met à jour la base de données en cas de parcours terminé : UserPath setOngoing = false, User setBusy = false
+     * @param userId Integer l'ID de l'utilisateur
+     * @return DTOEntity la tâche du jour ou null
+     */
     @Transactional
     public DTOEntity seeTaskOfTheDay(Integer userId) {
         UserPath up = findUserPathOfUser(userId);
@@ -55,6 +64,11 @@ public class UserPathService {
         return null;
     }
 
+    /**
+     * Retourne la différence entre la date du jour et la date de création d'une relation parcours-utilisateur
+     * @param userId Integer l'ID de l'utilisateur
+     * @return Integer le nombre de jours ou null
+     */
     public Integer getDayIndex(Integer userId) {
         UserPath up = findUserPathOfUser(userId);
         if (up != null && up.isOngoing()) {
@@ -65,23 +79,28 @@ public class UserPathService {
         return null;
     }
 
+    // Private methods
+    private UserPath findUserPathOfUser(Integer userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            for (UserPath up: userPathRepository.findAll()) {
+                if(up.getUser().getUserId().equals(userId) && up.isOngoing()) {
+                    return up;
+                }
+            }
+        }
+        return null;
+    }
+
      /*
     CRUD OPERATIONS
      */
 
-     private UserPath findUserPathOfUser(Integer userId) {
-         Optional<User> optionalUser = userRepository.findById(userId);
-         if(optionalUser.isPresent()) {
-             for (UserPath up: userPathRepository.findAll()) {
-                 if(up.getUser().getUserId().equals(userId) && up.isOngoing()) {
-                    return up;
-                 }
-             }
-         }
-         return null;
-     }
-
-    public List<DTOEntity> readPaths() {
+    /**
+     * Retourne la liste des parcours actifs et comportant une liste de 30 défis sous forme de DTOs
+     * @return List DTOEntity la liste des parcours
+     */
+     public List<DTOEntity> readPaths() {
         List<DTOEntity> list = new ArrayList<>();
         for(Path p: pathRepository.findAll()) {
             if (p.isPathActive() && taskPathRepository.findByPath(p).get().size() == 30) {
@@ -91,12 +110,25 @@ public class UserPathService {
         return list;
     }
 
+    /**
+     * Retourne la liste des relations utilisateur-parcours sous forme de DTOs
+     * @return List DTOEntity la liste des relations utilisateur-parcours
+     */
     public List<DTOEntity> read() {
         List<DTOEntity> list = new ArrayList<>();
         for(UserPath up: userPathRepository.findAll()) list.add(new DtoUtils().convertToDto(up, new UserPathGet()));
         return list;
     }
 
+    /**
+     * Crée une relation utilisateur-parcours
+     * Transaction
+     * Vérifie que l'utilisateur existe et n'a pas déjà un parcours en cours
+     * Vérifie que le parcours existe et qu'il est valide (actif et contient une liste de 30 défis)
+     * Crée la relation en base de données et définit l'utilisateur comme occupé et la relation comme en cours
+     * @param dtoEntity DTOEntity la relation utilisateur-parcours à créer
+     * @return DTOEntity la relation créée ou un Message(String) en cas d'échec
+     */
     @Transactional
     public DTOEntity create(DTOEntity dtoEntity) {
         Optional<User> optionalUser = userRepository.findById(((UserPathPost)dtoEntity).getUserId());

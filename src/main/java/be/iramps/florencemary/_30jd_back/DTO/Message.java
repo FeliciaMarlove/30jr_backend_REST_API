@@ -23,10 +23,19 @@ public class Message implements DTOEntity {
         this.aBoolean = aBoolean;
     }
 
+    /**
+     * Constructeur de message
+     * @param msg String le message
+     */
     public Message(String msg) {
         this.msg = msg;
     }
 
+    /**
+     * Constructeur de message
+     * @param msg String le message
+     * @param aBoolean boolean un booléen
+     */
     public Message(String msg, boolean aBoolean) {
         this(msg);
         this.aBoolean = aBoolean;

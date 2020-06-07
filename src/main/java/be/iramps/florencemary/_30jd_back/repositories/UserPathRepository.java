@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
+/**
+ * DAO relation utilisateur-parcours
+ */
 public interface UserPathRepository extends CrudRepository<UserPath, PK_User_Path> {
-    Optional<UserPath> findByPkUserPath(PK_User_Path pk_user_path);
 }

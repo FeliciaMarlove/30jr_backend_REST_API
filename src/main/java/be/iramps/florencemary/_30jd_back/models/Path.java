@@ -12,7 +12,7 @@ import java.util.Objects;
 public class Path implements Serializable {
 
     /**
-     * Integer Id auto-incrémenté
+     * Integer ID auto-incrémenté
      */
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "path_generator")
@@ -22,24 +22,31 @@ public class Path implements Serializable {
 
     /**
      * String nom
+     * Non null
+     * Unique
+     * Longueur max = 255
      */
     @Column(name = "path_name", nullable = false, unique = true)
     private String pathName;
 
     /**
      * String description courte
+     * Non null
+     * Longueur max = 255
      */
     @Column(name = "path_short_desc", nullable = false)
     private String pathShortDescription;
 
     /**
      * String description longue
+     * Longueur max = 1000
      */
     @Column(name = "path_long_desc", length = 1000)
     private String pathLongDescription;
 
     /**
      * boolean statut (actif/inactif)
+     * Non null
      */
     @Column(name = "path_active", nullable = false)
     private boolean pathActive;
@@ -48,38 +55,74 @@ public class Path implements Serializable {
 
     // GETTERS AND SETTERS
 
+    /**
+     * Retourne l'ID du parcours
+     * @return Integer l'ID
+     */
     public Integer getPathId() {
         return pathId;
     }
 
+    /**
+     * Retourne le nom du parcours
+     * @return String le nom
+     */
     public String getPathName() {
         return pathName;
     }
 
+    /**
+     * Définit le nom du parcours
+     * @param pathName String le nom
+     */
     public void setPathName(String pathName) {
         this.pathName = pathName;
     }
 
+    /**
+     * Retourne la description courte du parcours
+     * @return String la description
+     */
     public String getPathShortDescription() {
         return pathShortDescription;
     }
 
+    /**
+     * Définit la description courte du parcours
+     * @param pathShortDescription String la description courte
+     */
     public void setPathShortDescription(String pathShortDescription) {
         this.pathShortDescription = pathShortDescription;
     }
 
+    /**
+     * Retourne la description longue parcours
+     * @return String la description longue
+     */
     public String getPathLongDescription() {
         return pathLongDescription;
     }
 
+    /**
+     * Définit la description longue du parcours
+     * @param pathLongDescription String la description longue
+     */
     public void setPathLongDescription(String pathLongDescription) {
         this.pathLongDescription = pathLongDescription;
     }
 
+    /**
+     * Retourne le statut (actif/inactif) du parcours
+     * @return boolean le statut (true = actif, false = inactif)
+     */
     public boolean isPathActive() {
         return pathActive;
     }
 
+    /**
+     * Définit le statut (actif/inactif) du parcours
+     * @param pathActive boolean le statut (true = actif, false = inactif)
+     */
     public void setPathActive(boolean pathActive) {
         this.pathActive = pathActive;
     }
@@ -87,6 +130,13 @@ public class Path implements Serializable {
 
     // CONSTRUCTORS
 
+    /**
+     * Constructeur du parcours
+     * Initialise pathActive = false
+     * @param pathName String le nom du parcours
+     * @param pathShortDescription String la description courte du parcours
+     * @param pathLongDescription String la description longue du parcours (nullable)
+     */
     public Path(String pathName, String pathShortDescription, String pathLongDescription) {
         this.pathName = pathName;
         this.pathShortDescription = pathShortDescription;
