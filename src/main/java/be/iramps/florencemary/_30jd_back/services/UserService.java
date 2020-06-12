@@ -30,7 +30,7 @@ public class UserService implements CRUDService {
     /**
      * Vérifie la demande de connexion d'un utilisateur à l'application
      * @param connection DTOEntity DTO de connexion
-     * @return DTOEntity l'utilisateur (DTO GET) ou null
+     * @return DTOEntity l'utilisateur (DTO GET) ou null en cas d'échec
      */
      public DTOEntity login(DTOEntity connection) {
         String pwd = ((Connection)connection).getPassword();
