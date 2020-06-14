@@ -114,7 +114,7 @@ public class PathService implements CRUDService {
         if (optionalPath.isPresent()) {
             Path p = optionalPath.get();
             Optional<Task> optionalTask = taskRepository.findById(taskId);
-            if (optionalTask.isPresent() && listTasks(pathId).contains(optionalTask.get())) {
+            if (optionalTask.isPresent() && contains(pathId, taskId)) {
                 Task task = optionalTask.get();
                 TaskPath toDelete = taskPathRepository.findByPathAndTask(p, task).get();
                 taskPathRepository.delete(toDelete);
@@ -123,6 +123,16 @@ public class PathService implements CRUDService {
             return new Message("Le défi " + taskId + " n'est pas dans la liste", false);
         }
         return new Message("Le parcours " + pathId + " n'a pas été trouvé", false);
+    }
+
+    private boolean contains(Integer pathId, Integer taskId) {
+        List<DTOEntity> tasksOfPath = listTasks(pathId);
+        for(DTOEntity task: tasksOfPath) {
+            if (((TaskGet)task).getTaskId().equals(taskId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
