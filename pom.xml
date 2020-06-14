@@ -12,6 +12,7 @@
     <artifactId>_30jd_crud</artifactId>
     <version>0.0.1</version>
     <name>_30jd_crud</name>
+    <packaging>jar</packaging>
     <description>30 jours pour désencombrer</description>
 
     <properties>
@@ -106,6 +107,20 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                        <configuration>
+                            <executable>true</executable>
+                            <classifier>spring-boot</classifier>
+                            <mainClass>
+                                be.iramps.florencemary._30jd_back.Application
+                            </mainClass>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
