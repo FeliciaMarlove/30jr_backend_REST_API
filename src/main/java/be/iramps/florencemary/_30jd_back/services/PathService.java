@@ -80,7 +80,7 @@ public class PathService implements CRUDService {
                         taskPathRepository.save(tp);
                         return new Message("Défi ajouté", true);
                     }
-                    if (index > 0 && index <= size) {
+                    if (index >= 0 && index <= size) {
                         List<TaskPath> all = taskPathRepository.findByPath(p).get();
                         for (TaskPath each : all) {
                             if (each.getPosition() >= index) {
