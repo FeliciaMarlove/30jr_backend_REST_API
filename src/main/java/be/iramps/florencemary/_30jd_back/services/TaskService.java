@@ -21,8 +21,9 @@ public class TaskService implements CRUDService {
     private TaskPathRepository taskPathRepository;
 
     @Autowired
-    public TaskService(TaskRepository taskRepository) {
+    public TaskService(TaskRepository taskRepository, TaskPathRepository taskPathRepository) {
         this.taskRepository = taskRepository;
+        this.taskPathRepository = taskPathRepository;
     }
 
     //Private methods

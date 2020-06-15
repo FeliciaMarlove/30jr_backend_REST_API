@@ -262,7 +262,7 @@ public class PathService implements CRUDService {
             pathRepository.save(optPath.get());
             return new DtoUtils().convertToDto(optPath.get(), new PathGet());
         }
-        return new Message("La parcours avec l'ID " + id + " n'a pas été trouvé.", false);
+        return new Message("La parcours avec l'ID " + id + " n'a pas été trouvé ou est en cours chez un utilisateur.", false);
     }
 
     /**
