@@ -2,6 +2,8 @@ package be.iramps.florencemary._30jd_back.services;
 
 import be.iramps.florencemary._30jd_back.DTO.*;
 import be.iramps.florencemary._30jd_back.models.User;
+import be.iramps.florencemary._30jd_back.models.UserPath;
+import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
 import be.iramps.florencemary._30jd_back.security.UserRoles;
 import be.iramps.florencemary._30jd_back.repositories.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -17,10 +19,12 @@ import java.util.regex.Pattern;
 @Service
 public class UserService implements CRUDService {
     private UserRepository userRepository;
+    private UserPathRepository userPathRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserPathRepository userPathRepository) {
         this.userRepository = userRepository;
+        this.userPathRepository = userPathRepository;
     }
 
      /*
@@ -151,6 +155,12 @@ public class UserService implements CRUDService {
     public DTOEntity delete(Integer id) {
         Optional<User> optUser = userRepository.findById(id);
         if(optUser.isPresent()) {
+            List<UserPath> ups = (List<UserPath>) userPathRepository.findAll();
+            for (UserPath up: ups) {
+                if (up.getUser().getUserId().equals(id)) {
+                    userPathRepository.delete(up);
+                }
+            }
             userRepository.delete(optUser.get());
             return new Message("Utilisateur avec l'ID " + id + " supprimé", true);
         }
