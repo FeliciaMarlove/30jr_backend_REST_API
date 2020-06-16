@@ -103,8 +103,11 @@ public class UserPathService {
      public List<DTOEntity> readPaths() {
         List<DTOEntity> list = new ArrayList<>();
         for(Path p: pathRepository.findAll()) {
-            if (p.isPathActive() && taskPathRepository.findByPath(p).get().size() == 30) {
-                list.add(new DtoUtils().convertToDto(p, new PathGet()));
+            Optional<List<TaskPath>> opt = taskPathRepository.findByPath(p);
+            if (opt.isPresent()) {
+                if (p.isPathActive() && opt.get().size() == 30) {
+                    list.add(new DtoUtils().convertToDto(p, new PathGet()));
+                }
             }
         }
         return list;
