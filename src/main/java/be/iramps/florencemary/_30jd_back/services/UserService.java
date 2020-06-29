@@ -108,9 +108,9 @@ public class UserService implements CRUDService {
         if (!validateEmail(((UserPost)dtoEntity).getEmail())) return new Message("Le format de l'e-mail est incorrect.", false);
         if (!validatePassword(((UserPost)dtoEntity).getPassword())) return new Message("Le mot de passe doit contenir au moins 8 caractères.", false);
         if(userRepository.findByEmail(((UserPost)dtoEntity).getEmail()) == null) {
-            User u = (User)new DtoUtils().convertToEntity(new User(), dtoEntity);
+            User u = new User(((UserPost) dtoEntity).getEmail(), ((UserPost) dtoEntity).getPassword(), ((UserPost) dtoEntity).isNewsletter());
             try {
-                u.setUserRole(UserRoles.USER);
+                System.out.println(u);
                 userRepository.save(u);
                 return new DtoUtils().convertToDto(u, new UserGet());
             } catch (Exception e) {

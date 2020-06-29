@@ -5,6 +5,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
@@ -59,6 +60,9 @@ public class User implements Serializable {
      */
     @Column(name = "user_role", nullable = false)
     private UserRoles userRole;
+
+    @Column(name = "timestamp")
+    private Timestamp timestamp;
 
     // JOINS
 
@@ -152,6 +156,10 @@ public class User implements Serializable {
         this.userRole = userRole;
     }
 
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
     // CONSTRUCTORS
 
     /**
@@ -161,14 +169,14 @@ public class User implements Serializable {
      * @param password String le mot de passe
      *                 hache le mot de passe en utilisant l'algorithme BCrypt
      * @param newsletter boolean l'inscription à la newsletter
-     * @param userRole UserRoles le rôle
      */
-    public User(String email, String password, boolean newsletter, UserRoles userRole) {
+    public User(String email, String password, boolean newsletter) {
         this.email = email;
         this.password = BCrypt.hashpw(password, BCrypt.gensalt(12));
         this.newsletter = newsletter;
         this.busy = false;
-        this.userRole = userRole;
+        this.userRole = userRole.USER;
+        this.timestamp = new Timestamp(System.currentTimeMillis());
     }
 
     public User() {
@@ -198,6 +206,7 @@ public class User implements Serializable {
                 ", newsletter=" + newsletter +
                 ", busy=" + busy +
                 ", userRole=" + userRole +
+                ", timestamp=" + timestamp +
                 '}';
     }
 }
