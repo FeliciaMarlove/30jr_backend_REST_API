@@ -147,6 +147,7 @@ public class UserService implements CRUDService {
 
     /**
      * Supprime un utilisateur de la base de données
+     * Supprime les éventuelles relations utilisateur-parcours (contrainte clé étrangère)
      * L'enregistrement est supprimé sans archivage
      * @param id Integer l'ID de l'utilisateur à supprimer
      * @return DTOEntity Message(String, booléen)

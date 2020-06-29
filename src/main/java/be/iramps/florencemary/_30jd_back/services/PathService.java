@@ -280,5 +280,20 @@ public class PathService implements CRUDService {
         return new Message("La parcours avec l'ID " + id + " n'a pas été trouvé.", false);
     }
 
+    // private methods
+    private void sortTasks(Integer pathId) {
+        List<TaskPath> taskPaths = new ArrayList<>();
+        for (TaskPath tp : taskPathRepository.findAll()) {
+            if (tp.getPath().getPathId().equals(pathId)) {
+                taskPaths.add(tp);
+            }
+        }
+        Collections.sort(taskPaths);
+        for (int i = 1 ; i <= taskPaths.size() ; i++) {
+            if (taskPaths.get(i).getPosition().equals(taskPaths.get(i-1).getPosition())) {
+                taskPaths.get(i).setPosition(taskPaths.get(i).getPosition() + 1);
+            }
+        }
+    }
 
 }

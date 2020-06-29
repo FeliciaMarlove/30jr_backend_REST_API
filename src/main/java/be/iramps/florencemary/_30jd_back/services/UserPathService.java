@@ -52,7 +52,7 @@ public class UserPathService {
             int deltaDays = getDayIndex(userId);
             Path p = up.getPath();
             if (deltaDays < taskPathRepository.findByPath(p).get().size()) {
-                return new DtoUtils().convertToDto(taskPathRepository.findByPathAndPosition(p, deltaDays), new TaskGet());
+                return new DtoUtils().convertToDto(taskPathRepository.findByPathAndPosition(p, deltaDays).getTask(), new TaskGet());
             } else {
                 up.setOngoing(false);
                 userPathRepository.save(up);
