@@ -110,7 +110,6 @@ public class UserService implements CRUDService {
         if(userRepository.findByEmail(((UserPost)dtoEntity).getEmail()) == null) {
             User u = new User(((UserPost) dtoEntity).getEmail(), ((UserPost) dtoEntity).getPassword(), ((UserPost) dtoEntity).isNewsletter());
             try {
-                System.out.println(u);
                 userRepository.save(u);
                 return new DtoUtils().convertToDto(u, new UserGet());
             } catch (Exception e) {
