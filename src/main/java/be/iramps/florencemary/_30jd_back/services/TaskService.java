@@ -69,17 +69,7 @@ public class TaskService implements CRUDService {
      */
     @Override
     public DTOEntity create(DTOEntity dtoEntity) {
-        if (taskRepository.findByTaskName(((TaskPost)dtoEntity).getTaskName()) == null) {
-            try {
-                Task t = (Task)new DtoUtils().convertToEntity(new Task(), dtoEntity);
-                t.setTaskActive(true);
-                taskRepository.save(t);
-                return new DtoUtils().convertToDto(t, new TaskGet());
-            } catch (Exception e) {
-                return new Message("Informations manquantes, l'enregistrement a échoué.", false);
-            }
-        }
-        return new Message("Le nom du défi existe déjà, l'enregistrement a échoué.", false);
+        return null;
     }
 
     /**
@@ -91,20 +81,7 @@ public class TaskService implements CRUDService {
      */
     @Override
     public DTOEntity update(Integer id, DTOEntity dtoEntity) {
-        if(taskRepository.existsById(id)) {
-            Task t = taskRepository.findById(id).get();
-            try {
-                t.setTaskName(((TaskPost)dtoEntity).getTaskName());
-                t.setTaskShortDescription(((TaskPost)dtoEntity).getTaskShortDescription());
-                t.setTaskLongDescription(((TaskPost)dtoEntity).getTaskLongDescription());
-                taskRepository.save(t);
-                return new DtoUtils().convertToDto(t, new TaskGet());
-            } catch (Exception e) {
-                e.printStackTrace();
-                return new Message("Informations manquantes ou doublon, l'enregistrement a échoué.", false);
-            }
-        }
-        return new Message("Le défi avec l'ID " + id + " n'a pas été trouvé, l'enregistrement a échoué.", false);
+        return null;
     }
 
     /**
@@ -115,13 +92,7 @@ public class TaskService implements CRUDService {
      */
     @Override
     public DTOEntity delete(Integer id) {
-        Optional<Task> optTask = taskRepository.findById(id);
-        if(optTask.isPresent() && !taskIsUsed(id)) {
-            optTask.get().setTaskActive(false);
-            taskRepository.save(optTask.get());
-            return new DtoUtils().convertToDto(optTask.get(), new TaskGet());
-        }
-        return new Message("La défi avec l'ID " + id + " n'a pas été trouvé ou le défi est utilisé dans un parcours.", false);
+       return null;
     }
 
     /**
@@ -130,12 +101,6 @@ public class TaskService implements CRUDService {
      * @return DTOEntity la tâche activée (DTO GET) ou un Message(String, booléen) en cas d'échec
      */
     public DTOEntity activate(Integer id) {
-        Optional<Task> optTask = taskRepository.findById(id);
-        if(optTask.isPresent()) {
-            optTask.get().setTaskActive(true);
-            taskRepository.save(optTask.get());
-            return new DtoUtils().convertToDto(optTask.get(), new TaskGet());
-        }
-        return new Message("La défi avec l'ID " + id + " n'a pas été trouvé.", false);
+        return null;
     }
 }

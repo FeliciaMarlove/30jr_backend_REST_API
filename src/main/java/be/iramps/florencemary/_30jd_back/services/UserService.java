@@ -60,7 +60,7 @@ public class UserService implements CRUDService {
      }
 
     private boolean validatePassword(String pwdToValidate) {
-        String regex = "^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#!$%&+=]).*$";
+        String regex = "^[0-9a-zA-Z@#!$%&]{8,}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(pwdToValidate);
         return matcher.matches();
@@ -105,8 +105,8 @@ public class UserService implements CRUDService {
      */
     @Override
     public DTOEntity create(DTOEntity dtoEntity) {
-        if (!validateEmail(((UserPost)dtoEntity).getEmail())) return new Message("Le format de l'e-mail est incorrect", false);
-        if (!validatePassword(((UserPost)dtoEntity).getPassword())) return new Message("Le mot de passe doit 8 caractères dont au moins 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial. Les caractères accentués ne sont pas acceptés.", false);
+        if (!validateEmail(((UserPost)dtoEntity).getEmail())) return new Message("Le format de l'e-mail est incorrect.", false);
+        if (!validatePassword(((UserPost)dtoEntity).getPassword())) return new Message("Le mot de passe doit contenir au moins 8 caractères.", false);
         if(userRepository.findByEmail(((UserPost)dtoEntity).getEmail()) == null) {
             User u = (User)new DtoUtils().convertToEntity(new User(), dtoEntity);
             try {

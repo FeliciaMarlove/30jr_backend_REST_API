@@ -1,43 +1,41 @@
-package be.iramps.florencemary._30jd_back.DTO;
+//package be.iramps.florencemary._30jd_back.DTO;
+//
+//import java.time.LocalDate;
+//
 
-import java.time.LocalDate;
-
-/*
-Non utilisé
- */
-public class UserPathHistoryObj {
-    private String pathName;
-    private LocalDate dateEnd;
-
-    public UserPathHistoryObj(String pathName, LocalDate dateEnd) {
-        this.pathName = pathName;
-        this.dateEnd = dateEnd;
-    }
-
-    public UserPathHistoryObj() {
-    }
-
-    public String getPathName() {
-        return pathName;
-    }
-
-    public void setPathName(String pathName) {
-        this.pathName = pathName;
-    }
-
-    public LocalDate getDateEnd() {
-        return dateEnd;
-    }
-
-    public void setDateEnd(LocalDate dateEnd) {
-        this.dateEnd = dateEnd;
-    }
-
-    @Override
-    public String toString() {
-        return "UserPathHistoryObj{" +
-                "pathName='" + pathName + '\'' +
-                ", dateEnd=" + dateEnd +
-                '}';
-    }
-}
+//public class UserPathHistoryObj {
+//    private String pathName;
+//    private LocalDate dateEnd;
+//
+//    public UserPathHistoryObj(String pathName, LocalDate dateEnd) {
+//        this.pathName = pathName;
+//        this.dateEnd = dateEnd;
+//    }
+//
+//    public UserPathHistoryObj() {
+//    }
+//
+//    public String getPathName() {
+//        return pathName;
+//    }
+//
+//    public void setPathName(String pathName) {
+//        this.pathName = pathName;
+//    }
+//
+//    public LocalDate getDateEnd() {
+//        return dateEnd;
+//    }
+//
+//    public void setDateEnd(LocalDate dateEnd) {
+//        this.dateEnd = dateEnd;
+//    }
+//
+//    @Override
+//    public String toString() {
+//        return "UserPathHistoryObj{" +
+//                "pathName='" + pathName + '\'' +
+//                ", dateEnd=" + dateEnd +
+//                '}';
+//    }
+//}
