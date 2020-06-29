@@ -7,6 +7,24 @@ public class UserPost implements DTOEntity {
     private String email;
     private String password;
     private boolean newsletter;
+    private boolean localNotif;
+    private int localNotifHour;
+
+    public boolean isLocalNotif() {
+        return localNotif;
+    }
+
+    public void setLocalNotif(boolean localNotif) {
+        this.localNotif = localNotif;
+    }
+
+    public int getLocalNotifHour() {
+        return localNotifHour;
+    }
+
+    public void setLocalNotifHour(int localNotifHour) {
+        this.localNotifHour = localNotifHour;
+    }
 
     public String getEmail() {
         return email;

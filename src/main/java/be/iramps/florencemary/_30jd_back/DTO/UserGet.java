@@ -2,6 +2,8 @@ package be.iramps.florencemary._30jd_back.DTO;
 
 import be.iramps.florencemary._30jd_back.security.UserRoles;
 
+import java.sql.Timestamp;
+
 /**
  * DTO GET utilisateur
  */
@@ -11,6 +13,33 @@ public class UserGet implements DTOEntity {
     private boolean newsletter;
     private boolean busy;
     private UserRoles userRole;
+    private Timestamp timestamp;
+    private boolean localNotif;
+    private int localNotifHour;
+
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
+
+    public boolean isLocalNotif() {
+        return localNotif;
+    }
+
+    public void setLocalNotif(boolean localNotif) {
+        this.localNotif = localNotif;
+    }
+
+    public int getLocalNotifHour() {
+        return localNotifHour;
+    }
+
+    public void setLocalNotifHour(int localNotifHour) {
+        this.localNotifHour = localNotifHour;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -71,6 +100,9 @@ public class UserGet implements DTOEntity {
                 ", newsletter=" + newsletter +
                 ", busy=" + busy +
                 ", userRole=" + userRole +
+                ", timestamp=" + timestamp +
+                ", localNotif=" + localNotif +
+                ", localNotifHour=" + localNotifHour +
                 '}';
     }
 }

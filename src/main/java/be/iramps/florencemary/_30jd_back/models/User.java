@@ -94,6 +94,22 @@ public class User implements Serializable {
         return timestamp;
     }
 
+    public boolean isLocalNotif() {
+        return localNotif;
+    }
+
+    public void setLocalNotif(boolean localNotif) {
+        this.localNotif = localNotif;
+    }
+
+    public int getLocalNotifHour() {
+        return localNotifHour;
+    }
+
+    public void setLocalNotifHour(int localNotifHour) {
+        this.localNotifHour = localNotifHour;
+    }
+
     // CONSTRUCTORS
 
     public User(String email, String password, boolean newsletter) {
