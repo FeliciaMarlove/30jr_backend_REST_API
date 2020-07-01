@@ -2,10 +2,9 @@ package be.iramps.florencemary._30jd_back.services;
 
 import be.iramps.florencemary._30jd_back.DTO.*;
 import be.iramps.florencemary._30jd_back.models.*;
-import be.iramps.florencemary._30jd_back.repositories.PathRepository;
-import be.iramps.florencemary._30jd_back.repositories.TaskPathRepository;
-import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
-import be.iramps.florencemary._30jd_back.repositories.UserRepository;
+import be.iramps.florencemary._30jd_back.repositories.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,13 +21,16 @@ public class UserPathService {
     private UserRepository userRepository;
     private PathRepository pathRepository;
     private TaskPathRepository taskPathRepository;
+    private NotificationRepository notificationRepository;
+    private static final Logger LOGGER = LogManager.getLogger();
 
     @Autowired
-    public UserPathService(UserPathRepository userPathRepository, UserRepository userRepository, PathRepository pathRepository, TaskPathRepository taskPathRepository) {
+    public UserPathService(UserPathRepository userPathRepository, UserRepository userRepository, PathRepository pathRepository, TaskPathRepository taskPathRepository, NotificationRepository notificationRepository) {
         this.userPathRepository = userPathRepository;
         this.userRepository = userRepository;
         this.pathRepository = pathRepository;
         this.taskPathRepository = taskPathRepository;
+        this.notificationRepository = notificationRepository;
     }
 
     /*
@@ -105,9 +107,7 @@ public class UserPathService {
         for(Path p: pathRepository.findAll()) {
             Optional<List<TaskPath>> opt = taskPathRepository.findByPath(p);
             if (opt.isPresent()) {
-                if (p.isPathActive() && opt.get().size() == 30) {
-                    list.add(new DtoUtils().convertToDto(p, new PathGet()));
-                }
+                list.add(new DtoUtils().convertToDto(p, new PathGet()));
             }
         }
         return list;
@@ -144,9 +144,34 @@ public class UserPathService {
             u.setBusy(true);
             userRepository.save(u);
             UserPath up = new UserPath(u, p);
+            try {
+                List<Notification> notifications = notificationRepository.findAllByNotificationType(Notification_Type.DAY_TRIGGERED);
+                up.setNotificationId(notifications.get(0 + (int)(Math.random() * (((notifications.size()-1) - 0) + 1))).getNotificationId());
+            } catch (Exception e) {
+                LOGGER.warn("||| LOGGER ||| Couldn't initialize notification at UserPath creation | Exception: ".toUpperCase() + e.getMessage());
+            }
             userPathRepository.save(up);
             return new DtoUtils().convertToDto(up, new UserPathGet());
         }
         return new Message("L'utilisateur n'a pas été trouvé ou a déjà commencé un parcours");
+    }
+
+    public boolean update(Integer userId) {
+        try {
+            List<UserPath> ups = (List<UserPath>) userPathRepository.findAll();
+            for (UserPath up: ups) {
+                if (up.getUser().getUserId().equals(userId) && up.isOngoing()) {
+                    System.out.println(up);
+                    up.setDayTrigNotifWasSeen(true);
+                    System.out.println(up);
+                    return true;
+                }
+            }
+            LOGGER.warn("||| LOGGER ||| Couldn't update \"seen notif\" of UserPath because user couldn't be found or user has not ongoing path | Exception: ".toUpperCase());
+            return false;
+        } catch (Exception e) {
+            LOGGER.warn("||| LOGGER ||| Couldn't update \"seen notif\" of UserPath | Exception: ".toUpperCase() + e.getMessage());
+            return false;
+        }
     }
 }

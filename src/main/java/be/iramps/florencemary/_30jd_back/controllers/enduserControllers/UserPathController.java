@@ -9,10 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/**
- * Contrôleur REST : Relation Utilisateur-Parcours
- * /api/userpath
- */
 @RestController
 @RequestMapping(value = "/api/userpath")
 @CrossOrigin
@@ -26,51 +22,33 @@ public class UserPathController {
         this.service = service;
     }
 
-    /**
-     * (GET)
-     * @return List DTOEntity la liste des relations utilisateur-parcours
-     */
     @GetMapping
     public List<DTOEntity> read() { return this.service.read(); }
 
-    /**
-     * (POST)
-     * @param userPath la relation utilisateur-parcours à créer
-     * @return DTOEntity la relation créée
-     */
     @PostMapping
     public DTOEntity create(@RequestBody UserPathPost userPath) { return this.service.create(userPath); }
 
-    /**
-     * (GET) /{userId}
-     * Retourne le défi du jour pour un utilisateur
-     * @param userId l'ID de l'utlisateur
-     * @return DTOEntity la tâche du jour
-     */
     @GetMapping("/{userId}")
     public DTOEntity seeTaskOfTheDay(@PathVariable("userId") Integer userId) {
         return this.service.seeTaskOfTheDay(userId);
     }
 
-    /**
-     * (GET) /{userId}/day
-     * Retourne le jour en cours du parcours actif d'un utilisateur
-     * @param userId l'ID de l'utilisateur
-     * @return Integer le numéro du jour en nombre réel (commence à 1)
-     */
     @GetMapping("/{userId}/day")
     public Integer getDay(@PathVariable("userId") Integer userId) {
         Object result = this.service.getDayIndex(userId);
         return result != null ? (Integer)result + 1 : null;
     }
 
-    /**
-     * (GET) /paths
-     * Retourne la liste des parcours disponibles (size == 30 && actif)
-     * @return List DTOEntity la liste des parcours
-     */
     @GetMapping("/paths")
     public List<DTOEntity> seeAvailablePaths() {
         return this.service.readPaths();
+    }
+
+    /*
+    set seen à true
+     */
+    @PutMapping("/{userId}")
+    public boolean update(@PathVariable("userId") Integer userId) {
+        return this.service.update(userId);
     }
 }

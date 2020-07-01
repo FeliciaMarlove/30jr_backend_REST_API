@@ -4,9 +4,6 @@ import be.iramps.florencemary._30jd_back.security.UserRoles;
 
 import java.sql.Timestamp;
 
-/**
- * DTO GET utilisateur
- */
 public class UserGet implements DTOEntity {
     private Integer userId;
     private String email;

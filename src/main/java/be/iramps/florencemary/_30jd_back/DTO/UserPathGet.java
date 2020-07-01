@@ -10,6 +10,8 @@ public class UserPathGet  implements DTOEntity {
     private boolean ongoing;
     private Integer pathId;
     private Integer userId;
+    private Integer notificationId;
+    private boolean dayTrigNotifWasSeen;
 
     public PK_User_Path getPkUserPath() {
         return pkUserPath;
@@ -41,6 +43,22 @@ public class UserPathGet  implements DTOEntity {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getNotificationId() {
+        return notificationId;
+    }
+
+    public void setNotificationId(Integer notificationId) {
+        this.notificationId = notificationId;
+    }
+
+    public boolean isDayTrigNotifWasSeen() {
+        return dayTrigNotifWasSeen;
+    }
+
+    public void setDayTrigNotifWasSeen(boolean dayTrigNotifWasSeen) {
+        this.dayTrigNotifWasSeen = dayTrigNotifWasSeen;
     }
 
     public UserPathGet(PK_User_Path pkUserPath, boolean ongoing, Integer pathId, Integer userId) {

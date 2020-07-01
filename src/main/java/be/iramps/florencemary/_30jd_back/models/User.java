@@ -1,6 +1,8 @@
 package be.iramps.florencemary._30jd_back.models;
 
 import be.iramps.florencemary._30jd_back.security.UserRoles;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.mindrot.jbcrypt.BCrypt;
 
 import javax.persistence.*;
@@ -11,6 +13,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "person", schema = "public", catalog = "_30jd")
 public class User implements Serializable {
+    private static final Logger LOGGER = LogManager.getLogger();
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_generator")
@@ -36,11 +39,26 @@ public class User implements Serializable {
     @Column(name = "timestamp")
     private Timestamp timestamp;
 
+    /*
+    wants to receive local?
+     */
     @Column(name = "local_notif")
     private boolean localNotif;
 
     @Column(name = "local_notif_hour")
     private int localNotifHour;
+
+    /*
+    wants to receive push?
+     */
+    @Column(name = "push_notif")
+    private boolean pushNotif;
+
+    /*
+    has seen the intro notif?
+     */
+    @Column(name = "intro_notif")
+    private boolean introNotif;
 
     // JOINS
 
@@ -110,6 +128,22 @@ public class User implements Serializable {
         this.localNotifHour = localNotifHour;
     }
 
+    public boolean isPushNotif() {
+        return pushNotif;
+    }
+
+    public void setPushNotif(boolean pushNotif) {
+        this.pushNotif = pushNotif;
+    }
+
+    public boolean isIntroNotif() {
+        return introNotif;
+    }
+
+    public void setIntroNotif(boolean introNotif) {
+        this.introNotif = introNotif;
+    }
+
     // CONSTRUCTORS
 
     public User(String email, String password, boolean newsletter) {
@@ -120,7 +154,13 @@ public class User implements Serializable {
         this.userRole = userRole.USER;
         this.timestamp = new Timestamp(System.currentTimeMillis());
         this.localNotif = true;
-        this.localNotifHour = Integer.parseInt(timestamp.toString().substring(11,13));
+        this.introNotif = false;
+        this.pushNotif = true;
+        try {
+            this.localNotifHour = Integer.parseInt(timestamp.toString().substring(11,13));
+        } catch (Exception e) {
+            LOGGER.warn("||| LOGGER ||| Couldn't initialize notification hour | Exception: ".toUpperCase() + e.getMessage() + " | Substring: " + timestamp.toString().substring(11,13));
+        }
     }
 
     public User() {

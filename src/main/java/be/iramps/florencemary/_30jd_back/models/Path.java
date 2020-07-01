@@ -73,7 +73,6 @@ public class Path implements Serializable {
         this.pathName = pathName;
         this.pathShortDescription = pathShortDescription;
         this.pathLongDescription = pathLongDescription;
-        this.pathActive = false;
     }
 
     public Path() {
