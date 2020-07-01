@@ -2,8 +2,12 @@ package be.iramps.florencemary._30jd_back.utilities;
 
 import be.iramps.florencemary._30jd_back.models.Path;
 import be.iramps.florencemary._30jd_back.models.Task;
+import be.iramps.florencemary._30jd_back.models.TaskPath;
 import be.iramps.florencemary._30jd_back.repositories.PathRepository;
+import be.iramps.florencemary._30jd_back.repositories.TaskPathRepository;
 import be.iramps.florencemary._30jd_back.repositories.TaskRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -14,100 +18,93 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
-/**
- * Chargement de parcours et tâches depuis un fichier Excel
- * Exécuté au lancement de l'application
- */
-@Order(2)
+@Order(1)
 @Component
 public class FromExcelDataLoader implements ApplicationRunner {
     private TaskRepository taskRepository;
     private PathRepository pathRepository;
-    private String path1 = "./src/main/resources/dataloader.xlsx";
-    private String path2 = "./src/main/resources/dataloader_duplicate.xlsx"; // for test purpose: meant not to be loaded bc of duplicate names
-    private String path3 = "./src/main/resources/dataloader_empty_long.xlsx";
-    /*
-    additional paths to be declared here
-    example:
-            private String pathN = "./relative/path/dataloaderfile.xlsx";
-     */
-    private List<String> paths = new ArrayList<>();
+    private TaskPathRepository taskPathRepository;
+    private final String paths = "./src/main/resources/populate/paths.txt";
+    private final String folderPath = "./src/main/resources/populate/";
     private FileInputStream inputStream = null;
-
-    /*
-    additional paths to be added in the paths list here :
-     */
-    {
-        paths.add(path1);
-        paths.add(path2);
-        paths.add(path3);
-    }
+    private List<String> excelsPaths = new ArrayList<>();
+    private static final Logger LOGGER = LogManager.getLogger();
 
     @Autowired
-    public FromExcelDataLoader(TaskRepository taskRepository, PathRepository pathRepository) {
+    public FromExcelDataLoader(TaskRepository taskRepository, PathRepository pathRepository, TaskPathRepository taskPathRepository) {
         this.taskRepository = taskRepository;
         this.pathRepository = pathRepository;
+        this.taskPathRepository = taskPathRepository;
     }
 
-    /**
-     * Charge les tâches et parcours depuis une liste de fichiers Excel si la base de données parcours et tâches est vide
-     * @param args
-     * @throws Exception
-     */
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        System.out.println("2 - Load tasks and paths from Excel file");
-        if (taskRepository.count() == 0 && pathRepository.count() == 0) {
-            for (String path : paths) {
-                loadInDB(path);
-            }
-        } else {
-            System.out.println("Database already populated");
+        LOGGER.info("Loading paths and tasks");
+        Scanner sc = new Scanner(new File(paths));
+        while (sc.hasNext()) {
+            excelsPaths.add(folderPath + sc.nextLine());
+        }
+        for (String path : excelsPaths) {
+            loadInDB(path);
         }
     }
 
-    /**
-     * Parcourt un fichier Excel structuré et crée des tâches et parcours en base de données
-     * Transaction
-     * Gère les exceptions relatives à la manipulation de fichiers
-     * @param path String chemin vers un fichier Excel structuré
-     */
-    @Transactional
     public void loadInDB(String path) {
-        System.out.println("Path: " + path);
+        LOGGER.info("Excel file: " + path);
         XSSFWorkbook workbook = null;
         try {
+            Path parcours = null;
             workbook = new XSSFWorkbook(new FileInputStream(path));
-            XSSFSheet sheetT = workbook.getSheet("tasks");
+            XSSFSheet sheetT = workbook.getSheet("parcours");
             for (Iterator<Row> it = sheetT.rowIterator(); it.hasNext(); ) {
                 Row row = it.next();
-                taskRepository.save(new Task(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue(), row.getCell(2) != null ? row.getCell(2).getStringCellValue() : ""));
+                parcours = pathRepository.findByPathName(row.getCell(0).getStringCellValue());  // si le parcours E -> récup le parcours
+                if (parcours == null) { // sinon le crée avec les infos du fichier Excel
+                    parcours = pathRepository.save(new Path(
+                            row.getCell(0).getStringCellValue(),
+                            row.getCell(2) != null ? row.getCell(2).getStringCellValue() : "",
+                            row.getCell(1) != null ? row.getCell(1).getStringCellValue() : ""
+                    ));
+                    LOGGER.info("Path " + parcours.getPathName() + " created.");
+                }
             }
-            XSSFSheet sheetP = workbook.getSheet("paths");
-            for (Iterator<Row> it = sheetP.rowIterator(); it.hasNext(); ) {
-                Row row = it.next();
-                pathRepository.save(new Path(row.getCell(0).getStringCellValue(), row.getCell(1).getStringCellValue(), row.getCell(2) != null ? row.getCell(2).getStringCellValue() : ""));
+            // si on a un parcours mais qu'il est vide (pas de relation task-path E), on remplit avec les défis
+            if (parcours != null && !taskPathRepository.findByPath(parcours).isPresent()) {
+                Integer position = 0;
+                XSSFSheet sheetP = workbook.getSheet("defis");
+                for (Iterator<Row> it = sheetP.rowIterator(); it.hasNext(); ) {
+                    Row row = it.next();
+                    Task task = taskRepository.save(new Task(
+                            row.getCell(0).getStringCellValue(),
+                            row.getCell(2) != null ? row.getCell(2).getStringCellValue() : "",
+                            row.getCell(1) != null ? row.getCell(1).getStringCellValue() : ""
+                    ));
+                    position++;
+                    taskPathRepository.save(new TaskPath(task, parcours, position));
+                    parcours.setPathActive(true);
+                }
+                LOGGER.info(position + " tasks added to TaskPath relation.");
             }
-            System.out.println("Excel file " + path + " loaded with success");
         } catch (FileNotFoundException fnf) {
-            System.out.println("File path " + path + " is wrong or file is in use");
+            LOGGER.warn("File path " + path + " is wrong or file is in use");
         } catch (IOException ioe) {
-            System.out.println("IOException ".toUpperCase() + ioe.getMessage());
+            LOGGER.warn("IOException ".toUpperCase() + ioe.getMessage());
         } catch (Exception e) {
-            System.out.println("Exception ".toUpperCase() + e.getMessage());
+            LOGGER.warn("Exception ".toUpperCase() + e.getMessage());
         } finally {
             try {
                 if (workbook != null) workbook.close();
-                System.out.println("Workbook closed");
             } catch (IOException ioe) {
-                System.out.println(ioe.getMessage());
+                LOGGER.warn(ioe.getMessage());
             }
         }
     }
