@@ -136,7 +136,7 @@ public class User implements Serializable {
         this.pushNotif = pushNotif;
     }
 
-    public boolean isIntroNotif() {
+    public boolean hasSeenIntroNotif() {
         return introNotif;
     }
 

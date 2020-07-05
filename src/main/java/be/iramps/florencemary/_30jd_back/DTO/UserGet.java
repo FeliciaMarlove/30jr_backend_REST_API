@@ -13,6 +13,8 @@ public class UserGet implements DTOEntity {
     private Timestamp timestamp;
     private boolean localNotif;
     private int localNotifHour;
+    private boolean introNotif;
+    private boolean pushNotif;
 
     public Timestamp getTimestamp() {
         return timestamp;
@@ -76,6 +78,22 @@ public class UserGet implements DTOEntity {
 
     public void setUserRole(UserRoles userRole) {
         this.userRole = userRole;
+    }
+
+    public boolean isIntroNotif() {
+        return introNotif;
+    }
+
+    public void setIntroNotif(boolean introNotif) {
+        this.introNotif = introNotif;
+    }
+
+    public boolean isPushNotif() {
+        return pushNotif;
+    }
+
+    public void setPushNotif(boolean pushNotif) {
+        this.pushNotif = pushNotif;
     }
 
     public UserGet(Integer userId, String email, boolean newsletter, boolean busy, UserRoles userRole) {

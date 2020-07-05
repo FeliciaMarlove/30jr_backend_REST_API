@@ -21,8 +21,6 @@ public class UserController {
 
     @Autowired
     private UserRepository repository;
-    @Autowired
-    private NotificationRepository notificationRepository;
 
     public UserController(UserService service) {
         this.service = service;
@@ -41,16 +39,19 @@ public class UserController {
         return this.service.delete(id);
     }
 
-    @GetMapping("/locale")
-    public Notification readLocaleNotif() {
-        List<Notification> locals = notificationRepository.findAllByNotificationType(Notification_Type.LOCAL);
-        return locals.get(0); // une seule notif locale en DB
+    /*
+    Notif ou null
+     */
+    @GetMapping("/{id}/locale")
+    public Notification readLocaleNotif(@PathVariable("id") Integer id) {
+        return this.service.readLocale(id);
     }
 
-    @GetMapping("/intro")
-    public List<Notification> readIntroNotifs() {
-        List<Notification> intros = notificationRepository.findAllByNotificationType(Notification_Type.INTRO);
-        Collections.sort(intros);
-        return intros;
+    /*
+    Notif ou null
+     */
+    @GetMapping("/{id}/intro")
+    public List<Notification> readIntroNotifs(@PathVariable("id") Integer id) {
+        return this.service.readIntro(id);
     }
 }

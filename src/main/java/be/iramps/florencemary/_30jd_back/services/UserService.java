@@ -1,8 +1,11 @@
 package be.iramps.florencemary._30jd_back.services;
 
 import be.iramps.florencemary._30jd_back.DTO.*;
+import be.iramps.florencemary._30jd_back.models.Notification;
+import be.iramps.florencemary._30jd_back.models.Notification_Type;
 import be.iramps.florencemary._30jd_back.models.User;
 import be.iramps.florencemary._30jd_back.models.UserPath;
+import be.iramps.florencemary._30jd_back.repositories.NotificationRepository;
 import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
 import be.iramps.florencemary._30jd_back.repositories.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
@@ -10,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -19,16 +23,39 @@ import java.util.regex.Pattern;
 public class UserService implements CRUDService {
     private UserRepository userRepository;
     private UserPathRepository userPathRepository;
+    private NotificationRepository notificationRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, UserPathRepository userPathRepository) {
+    public UserService(UserRepository userRepository, UserPathRepository userPathRepository, NotificationRepository notificationRepository) {
         this.userRepository = userRepository;
         this.userPathRepository = userPathRepository;
+        this.notificationRepository = notificationRepository;
     }
 
-     /*
+   /*
     BUSINESS LAYER
      */
+
+     public Notification readLocale(Integer userId) {
+         User user = userRepository.findById(userId).get();
+         List<Notification> locals = notificationRepository.findAllByNotificationType(Notification_Type.LOCAL);
+         if (user.isLocalNotif() && user.isBusy()) {
+             return locals.get(0); // une seule notif locale en DB
+         } else {
+             return null;
+         }
+     }
+
+     public List<Notification> readIntro(Integer userId) {
+         User user = userRepository.findById(userId).get();
+         if (!user.hasSeenIntroNotif()) {
+             List<Notification> intros = notificationRepository.findAllByNotificationType(Notification_Type.INTRO);
+             Collections.sort(intros);
+             user.setIntroNotif(true);
+             return intros;
+         }
+         return null;
+     }
 
      public DTOEntity login(DTOEntity connection) {
         String pwd = ((Connection)connection).getPassword();
