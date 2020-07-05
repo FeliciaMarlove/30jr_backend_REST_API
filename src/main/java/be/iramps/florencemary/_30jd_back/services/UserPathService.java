@@ -156,22 +156,20 @@ public class UserPathService {
         return new Message("L'utilisateur n'a pas été trouvé ou a déjà commencé un parcours");
     }
 
-    public boolean update(Integer userId) {
+    public Notification showDayTriggeredNotif(Integer userId) {
         try {
             List<UserPath> ups = (List<UserPath>) userPathRepository.findAll();
             for (UserPath up: ups) {
                 if (up.getUser().getUserId().equals(userId) && up.isOngoing()) {
-                    System.out.println(up);
                     up.setDayTrigNotifWasSeen(true);
-                    System.out.println(up);
-                    return true;
+                    return notificationRepository.findById(up.getNotificationId()).get();
                 }
             }
-            LOGGER.warn("||| LOGGER ||| Couldn't update \"seen notif\" of UserPath because user couldn't be found or user has not ongoing path | Exception: ".toUpperCase());
-            return false;
+            LOGGER.warn("||| LOGGER ||| Couldn't show day triggered notification \"seen notif\" of UserPath because user couldn't be found or user has no ongoing path | Exception: ".toUpperCase());
+            return null;
         } catch (Exception e) {
-            LOGGER.warn("||| LOGGER ||| Couldn't update \"seen notif\" of UserPath | Exception: ".toUpperCase() + e.getMessage());
-            return false;
+            LOGGER.warn("||| LOGGER ||| Couldn't show day triggered notification \"seen notif\" of UserPath | Exception: ".toUpperCase() + e.getMessage());
+            return null;
         }
     }
 }

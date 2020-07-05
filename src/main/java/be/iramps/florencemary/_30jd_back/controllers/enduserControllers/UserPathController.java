@@ -2,6 +2,7 @@ package be.iramps.florencemary._30jd_back.controllers.enduserControllers;
 
 import be.iramps.florencemary._30jd_back.DTO.DTOEntity;
 import be.iramps.florencemary._30jd_back.DTO.UserPathPost;
+import be.iramps.florencemary._30jd_back.models.Notification;
 import be.iramps.florencemary._30jd_back.repositories.UserPathRepository;
 import be.iramps.florencemary._30jd_back.services.UserPathService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,10 +46,10 @@ public class UserPathController {
     }
 
     /*
-    set seen à true
+    Notification ou null
      */
     @PutMapping("/{userId}")
-    public boolean update(@PathVariable("userId") Integer userId) {
-        return this.service.update(userId);
+    public Notification seeDayTriggeredNotif(@PathVariable("userId") Integer userId) {
+        return this.service.showDayTriggeredNotif(userId);
     }
 }
